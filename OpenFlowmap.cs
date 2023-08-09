@@ -6,13 +6,15 @@ public class OpenFlowmap : MonoBehaviour
 {
     public enum Resolution { _32x32 = 32, _64x64 = 64, _128x128 = 128, _256x256 = 256, _512x512 = 512, _1024x1024 = 1024 }
     public Resolution resolutionEnum = Resolution._128x128;
-    public float radius = 0.2f;
+    [Range(0.1f, 1)] public float radius = 0.2f;
     public LayerMask layerMask;
 
     public List<Vector2> FlowmapPoints { get; private set; }
     public List<Color> FlowmapColors { get; private set; }
+    // public bool ShowFlowVectors { get => m_showFlowVectors; }
 
-    [SerializeField] bool m_showTexture = false;
+    [SerializeField] bool m_showFlowTexture = false;
+    // [SerializeField] bool m_showFlowVectors = false;
 
     private MeshRenderer m_meshRenderer;
     private MeshFilter m_meshFilter;
@@ -52,7 +54,7 @@ public class OpenFlowmap : MonoBehaviour
     private void Update()
     {
         GetFlowPoints();
-        if (m_showTexture) VisualizeFlowmap();
+        if (m_showFlowTexture) VisualizeFlowmap();
     }
 
     public void GetFlowPoints()
