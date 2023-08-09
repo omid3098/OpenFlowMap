@@ -4,9 +4,8 @@ using UnityEngine;
 [ExecuteInEditMode]
 public class OpenFlowmap : MonoBehaviour
 {
-    // resolution enum to select the resolution of the flowmap
     public enum Resolution { _32x32 = 32, _64x64 = 64, _128x128 = 128, _256x256 = 256, _512x512 = 512, _1024x1024 = 1024 }
-    public Resolution resolutionEnum = Resolution._32x32;
+    public Resolution resolutionEnum = Resolution._128x128;
     public float radius = 0.2f;
     public LayerMask layerMask;
 
@@ -16,7 +15,7 @@ public class OpenFlowmap : MonoBehaviour
     [SerializeField] bool m_showTexture = false;
 
     private MeshRenderer m_meshRenderer;
-    private Collider m_collider;
+    private MeshFilter m_meshFilter;
     private Material m_unlitFlowMaterial;
     private Collider[] m_hitColliders = new Collider[3];
     private Vector2Int m_resolution;
@@ -26,7 +25,7 @@ public class OpenFlowmap : MonoBehaviour
 
     public void InitializeFlowmapPoints()
     {
-        Debug.Log("Initializing flowmap points");
+        // Debug.Log("Initializing flowmap points");
         m_resolution = new Vector2Int((int)resolutionEnum, (int)resolutionEnum);
         FlowmapPoints = new List<Vector2>();
         FlowmapColors = new List<Color>(new Color[m_resolution.x * m_resolution.y]);
@@ -38,7 +37,7 @@ public class OpenFlowmap : MonoBehaviour
         m_meshRenderer = GetComponent<MeshRenderer>();
         m_meshRenderer.sharedMaterial = m_unlitFlowMaterial;
 
-        m_collider = GetComponent<Collider>();
+        m_meshFilter = GetComponent<MeshFilter>();
 
 
         for (int x = 0; x < m_resolution.x; x++)
@@ -140,12 +139,11 @@ public class OpenFlowmap : MonoBehaviour
     public Vector3 GetPointPosition(float x, float y)
     {
         // calculate the point's position and rotation to keep it aligned with the plane
-        Vector3 colliderSize = m_collider.bounds.size;
-        float pointX = (x * colliderSize.x / m_resolution.x - colliderSize.x / 2f) / transform.localScale.x;
+        var bounds = m_meshFilter.sharedMesh.bounds.size;
+        float pointX = x * bounds.x / m_resolution.x - bounds.x / 2f;
         float pointY = 0;
-        float pointZ = (y * colliderSize.z / m_resolution.y - colliderSize.z / 2f) / transform.localScale.z;
+        float pointZ = y * bounds.z / m_resolution.y - bounds.z / 2f;
         Vector3 point = transform.TransformPoint(pointX, pointY, pointZ);
-
         return point;
     }
 
