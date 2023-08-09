@@ -13,13 +13,15 @@ public class OpenFlowmap : MonoBehaviour
     public List<Vector2> FlowmapPoints { get; private set; }
     public List<Color> FlowmapColors { get; private set; }
 
+    [SerializeField] bool m_showTexture = false;
+
     private MeshRenderer m_meshRenderer;
     private Collider m_collider;
     private Material m_unlitFlowMaterial;
     private Collider[] m_hitColliders = new Collider[3];
     private Vector2Int m_resolution;
 
-    private void OnEnable() => InitializeFlowmapPoints();
+    private void Awake() => InitializeFlowmapPoints();
     private void OnValidate() => InitializeFlowmapPoints();
 
     public void InitializeFlowmapPoints()
@@ -48,10 +50,10 @@ public class OpenFlowmap : MonoBehaviour
         }
     }
 
-    private void OnDrawGizmos()
+    private void Update()
     {
         GetFlowPoints();
-        VisualizeFlowmap();
+        if (m_showTexture) VisualizeFlowmap();
     }
 
     public void GetFlowPoints()
@@ -78,7 +80,6 @@ public class OpenFlowmap : MonoBehaviour
 
     private void VisualizeFlowmap()
     {
-        // GizmoSphereVisualizer();
         UpdateMaterialTexture();
     }
 
@@ -101,7 +102,6 @@ public class OpenFlowmap : MonoBehaviour
         }
     }
 
-
     public Texture GetFlowmapTexture()
     {
         Texture2D texture = new Texture2D(m_resolution.x, m_resolution.y);
@@ -118,20 +118,6 @@ public class OpenFlowmap : MonoBehaviour
         }
         texture.Apply();
         return texture;
-    }
-
-    private void GizmoSphereVisualizer()
-    {
-        for (int x = 0; x < m_resolution.x; x++)
-        {
-            for (int y = 0; y < m_resolution.y; y++)
-            {
-                int index = x * m_resolution.y + y;
-                var pointPosition = GetPointPosition(x, y);
-                Gizmos.color = FlowmapColors[index];
-                Gizmos.DrawSphere(pointPosition, 0.04f);
-            }
-        }
     }
 
     public Color GetFlowDirectionColor(Collider[] hitColliders, Vector3 pointPosition)
@@ -153,8 +139,13 @@ public class OpenFlowmap : MonoBehaviour
 
     public Vector3 GetPointPosition(float x, float y)
     {
-        var point = new Vector3(x * m_collider.bounds.size.x / (float)m_resolution.x - m_collider.bounds.size.x / 2f, 0, y * m_collider.bounds.size.z / (float)m_resolution.y - m_collider.bounds.size.z / 2f);
-        point += transform.position;
+        // calculate the point's position and rotation to keep it aligned with the plane
+        Vector3 colliderSize = m_collider.bounds.size;
+        float pointX = (x * colliderSize.x / m_resolution.x - colliderSize.x / 2f) / transform.localScale.x;
+        float pointY = 0;
+        float pointZ = (y * colliderSize.z / m_resolution.y - colliderSize.z / 2f) / transform.localScale.z;
+        Vector3 point = transform.TransformPoint(pointX, pointY, pointZ);
+
         return point;
     }
 
