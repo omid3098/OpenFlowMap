@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: OpenFlowmap_LitFlowmap
+  m_Name: LitFlowmap
   m_Shader: {fileID: -6465566751694194690, guid: 4ce700c0a3a8502439de3041589b0cb5,
     type: 3}
   m_Parent: {fileID: 0}
@@ -46,7 +46,7 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _FlowStrenght: 0.191
+    - _FlowStrenght: 0.149
     - _QueueControl: 0
     - _QueueOffset: 0
     m_Colors: []

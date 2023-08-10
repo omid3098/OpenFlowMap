@@ -21,6 +21,7 @@ public class OpenFlowmap : MonoBehaviour
     private Material m_unlitFlowMaterial;
     private Collider[] m_hitColliders = new Collider[3];
     private Vector2Int m_resolution;
+    private Texture2D m_flowmapTexture;
 
     private void Awake() => InitializeFlowmapPoints();
     private void OnValidate() => InitializeFlowmapPoints();
@@ -31,6 +32,7 @@ public class OpenFlowmap : MonoBehaviour
         m_resolution = new Vector2Int((int)resolutionEnum, (int)resolutionEnum);
         FlowmapPoints = new List<Vector2>();
         FlowmapColors = new List<Color>(new Color[m_resolution.x * m_resolution.y]);
+        m_flowmapTexture = new Texture2D(m_resolution.x, m_resolution.y);
 
         // find Shader: OpenFlowmap/UnlitFlowmap and create a new material
         m_unlitFlowMaterial = new Material(Shader.Find("OpenFlowmap/UnlitFlowmap"));
@@ -91,11 +93,8 @@ public class OpenFlowmap : MonoBehaviour
         // Check if the MeshRenderer and material exist
         if (m_meshRenderer != null && m_meshRenderer.sharedMaterial != null)
         {
-            // Get the flowmap texture
-            Texture flowmapTexture = GetFlowmapTexture();
-
             // Assign the flowmap texture to the material's main texture
-            m_meshRenderer.sharedMaterial.SetTexture("_MainTex", flowmapTexture);
+            m_meshRenderer.sharedMaterial.SetTexture("_MainTex", GetFlowmapTexture());
         }
         else
         {
@@ -105,7 +104,6 @@ public class OpenFlowmap : MonoBehaviour
 
     public Texture GetFlowmapTexture()
     {
-        Texture2D texture = new Texture2D(m_resolution.x, m_resolution.y);
         // Iterate over the flowmap colors and set the pixels, flipping the Y-axis
         for (int x = 0; x < m_resolution.x; x++)
         {
@@ -114,15 +112,15 @@ public class OpenFlowmap : MonoBehaviour
                 int index = x * m_resolution.y + y;
                 int flippedY = m_resolution.y - y - 1; // Flip the Y-axis
                 int flippedX = m_resolution.x - x - 1; // Flip the X-axis
-                texture.SetPixel(flippedX, flippedY, FlowmapColors[index]);
+                m_flowmapTexture.SetPixel(flippedX, flippedY, FlowmapColors[index]);
             }
         }
-        texture.Apply();
-        return texture;
+        m_flowmapTexture.Apply();
+        return m_flowmapTexture;
     }
-
     public Color GetFlowDirectionColor(Collider[] hitColliders, Vector3 pointPosition)
     {
+        Vector2 sumDirection = Vector2.zero;
         for (int i = 0; i < hitColliders.Length; i++)
         {
             Vector3 closestPoint = hitColliders[i].ClosestPoint(pointPosition);
@@ -132,11 +130,17 @@ public class OpenFlowmap : MonoBehaviour
             Vector2 direction = new Vector2(pointPosition.x - closestPoint.x, pointPosition.z - closestPoint.z);
             direction.Normalize();
             direction *= strength;
-            direction += Vector2.one / 2f;
-            return new Color(direction.x, direction.y, 0, 1);
+            sumDirection += direction;
         }
-        return Color.black;
+        if (hitColliders.Length > 0)
+        {
+            Vector2 averageDirection = sumDirection / hitColliders.Length;
+            averageDirection += Vector2.one / 2f;
+            return new Color(averageDirection.x, averageDirection.y, 0, 1);
+        }
+        return new Color(0.5f, 0.5f, 0, 1); // Default color if no colliders are hit
     }
+
 
     public Vector3 GetPointPosition(float x, float y)
     {
@@ -175,10 +179,17 @@ public class OpenFlowmap : MonoBehaviour
         UnityEditor.Selection.activeObject = UnityEditor.AssetDatabase.LoadAssetAtPath(filePath, typeof(Texture2D));
     }
 #endif
-
-    private void OnDisable()
+    private void Dispose()
     {
-        FlowmapColors = new List<Color>(new Color[m_resolution.x * m_resolution.y]);
-        FlowmapPoints = new List<Vector2>();
+        if (m_flowmapTexture != null)
+        {
+            Destroy(m_flowmapTexture);
+            m_flowmapTexture = null;
+        }
+    }
+
+    private void OnDestroy()
+    {
+        Dispose();
     }
 }
