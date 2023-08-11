@@ -13,12 +13,13 @@ public class OpenFlowmap : MonoBehaviour
     public List<Color> FlowmapColors { get; private set; }
     // public bool ShowFlowVectors { get => m_showFlowVectors; }
 
-    [SerializeField] bool m_showFlowTexture = false;
+    [SerializeField] bool m_showFlowMaterial = true;
     // [SerializeField] bool m_showFlowVectors = false;
 
     private MeshRenderer m_meshRenderer;
     private MeshFilter m_meshFilter;
     private Material m_unlitFlowMaterial;
+    private Material m_previusMaterial;
     private Collider[] m_hitColliders = new Collider[3];
     private Vector2Int m_resolution;
     private Texture2D m_flowmapTexture;
@@ -34,12 +35,19 @@ public class OpenFlowmap : MonoBehaviour
         FlowmapColors = new List<Color>(new Color[m_resolution.x * m_resolution.y]);
         m_flowmapTexture = new Texture2D(m_resolution.x, m_resolution.y);
 
-        // find Shader: OpenFlowmap/UnlitFlowmap and create a new material
-        m_unlitFlowMaterial = new Material(Shader.Find("OpenFlowmap/UnlitFlowmap"));
-
         // Get the MeshRenderer component
         m_meshRenderer = GetComponent<MeshRenderer>();
-        m_meshRenderer.sharedMaterial = m_unlitFlowMaterial;
+
+        if (m_showFlowMaterial)
+        {
+            // store the previous material to restore it later if it already exists
+            if (m_previusMaterial != null) m_previusMaterial = m_meshRenderer.sharedMaterial;
+            else if (m_meshRenderer.sharedMaterial != null) m_previusMaterial = m_meshRenderer.sharedMaterial;
+
+            // find Shader: OpenFlowmap/UnlitFlowmap and create a new material
+            m_unlitFlowMaterial = new Material(Shader.Find("OpenFlowmap/UnlitFlowmap"));
+            m_meshRenderer.sharedMaterial = m_unlitFlowMaterial;
+        }
 
         m_meshFilter = GetComponent<MeshFilter>();
 
@@ -56,7 +64,7 @@ public class OpenFlowmap : MonoBehaviour
     private void Update()
     {
         GetFlowPoints();
-        if (m_showFlowTexture) VisualizeFlowmap();
+        if (m_showFlowMaterial) VisualizeFlowmap();
     }
 
     public void GetFlowPoints()
@@ -94,7 +102,7 @@ public class OpenFlowmap : MonoBehaviour
         if (m_meshRenderer != null && m_meshRenderer.sharedMaterial != null)
         {
             // Assign the flowmap texture to the material's main texture
-            m_meshRenderer.sharedMaterial.SetTexture("_MainTex", GetFlowmapTexture());
+            m_meshRenderer.sharedMaterial.SetTexture("_FlowMap", GetFlowmapTexture());
         }
         else
         {
@@ -183,8 +191,14 @@ public class OpenFlowmap : MonoBehaviour
     {
         if (m_flowmapTexture != null)
         {
-            Destroy(m_flowmapTexture);
+            DestroyImmediate(m_flowmapTexture);
             m_flowmapTexture = null;
+        }
+        // destroy the material
+        if (m_unlitFlowMaterial != null)
+        {
+            DestroyImmediate(m_unlitFlowMaterial);
+            m_unlitFlowMaterial = null;
         }
     }
 

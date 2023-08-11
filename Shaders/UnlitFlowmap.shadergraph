@@ -155,7 +155,7 @@
     "m_Type": "UnityEditor.ShaderGraph.Texture2DMaterialSlot",
     "m_ObjectId": "0a4b796fbd294d848632a49877cfad7d",
     "m_Id": 0,
-    "m_DisplayName": "MainTex",
+    "m_DisplayName": "FlowMap",
     "m_SlotType": 1,
     "m_Hidden": false,
     "m_ShaderOutputName": "Out",
@@ -192,10 +192,10 @@
     "m_Guid": {
         "m_GuidSerialized": "f69088e7-e2a2-4044-8ed2-211664294ddc"
     },
-    "m_Name": "MainTex",
+    "m_Name": "FlowMap",
     "m_DefaultRefNameVersion": 1,
-    "m_RefNameGeneratedByDisplayName": "MainTex",
-    "m_DefaultReferenceName": "_MainTex",
+    "m_RefNameGeneratedByDisplayName": "FlowMap",
+    "m_DefaultReferenceName": "_FlowMap",
     "m_OverrideReferenceName": "",
     "m_GeneratePropertyBlock": true,
     "m_UseCustomSlotLabel": false,
