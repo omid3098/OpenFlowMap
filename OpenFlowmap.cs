@@ -33,7 +33,11 @@ public class OpenFlowmap : MonoBehaviour
         m_resolution = new Vector2Int((int)resolutionEnum, (int)resolutionEnum);
         FlowmapPoints = new List<Vector2>();
         FlowmapColors = new List<Color>(new Color[m_resolution.x * m_resolution.y]);
-        m_flowmapTexture = new Texture2D(m_resolution.x, m_resolution.y);
+        m_flowmapTexture = new Texture2D(m_resolution.x, m_resolution.y, TextureFormat.RG32, false, true)
+        {
+            filterMode = FilterMode.Bilinear,
+            wrapMode = TextureWrapMode.Clamp
+        };
 
         // Get the MeshRenderer component
         m_meshRenderer = GetComponent<MeshRenderer>();
@@ -123,7 +127,7 @@ public class OpenFlowmap : MonoBehaviour
                 m_flowmapTexture.SetPixel(flippedX, flippedY, FlowmapColors[index]);
             }
         }
-        m_flowmapTexture.Apply();
+        m_flowmapTexture.Apply(false, false);
         return m_flowmapTexture;
     }
     public Color GetFlowDirectionColor(Collider[] hitColliders, Vector3 pointPosition)
