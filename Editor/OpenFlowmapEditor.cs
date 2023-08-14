@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEditor;
+using UnityEngine.XR;
 
 [CustomEditor(typeof(OpenFlowmap))]
 public class OpenFlowmapEditor : Editor
@@ -49,20 +50,18 @@ public class OpenFlowmapEditor : Editor
     {
         if (Event.current.type == EventType.Repaint)
         {
-            OpenFlowmap openFlowmap = (OpenFlowmap)target;
-            if (openFlowmap.FlowmapPoints == null) return;
-            if (openFlowmap.FlowmapColors == null) return;
-            for (int i = 0; i < openFlowmap.FlowmapPoints.Count; i++)
+            int resolution = openFlowmap.Flowmap.Resolution;
+            for (int u = 0; u < resolution; u++)
             {
-                var pointPosition = openFlowmap.GetPointPosition(openFlowmap.FlowmapPoints[i].x, openFlowmap.FlowmapPoints[i].y);
-                Color color = openFlowmap.FlowmapColors[i];
-                color.a = 1;
-                Handles.color = color;
-                // Lets calculate the direction of the flow vector from the color
-                Vector3 direction = new Vector3(color.r - 0.5f, 0, color.g - 0.5f);
-                // Draw the flow vector
-                Handles.DrawLine(pointPosition, pointPosition + (direction + Vector3.up) * m_vectorLength);
-                // Handles.DrawLine(pointPosition, pointPosition + Vector3.up * 0.3f);
+                for (int v = 0; v < resolution; v++)
+                {
+                    var point = openFlowmap.GetPointPosition(u, v);
+                    var color = openFlowmap.Flowmap.GetColor(u, v);
+                    Vector3 direction = new Vector3(color.r - 0.5f, 0, color.g - 0.5f);
+
+                    Handles.color = color;
+                    Handles.DrawLine(point, point + (direction + Vector3.up) * m_vectorLength);
+                }
             }
         }
     }
