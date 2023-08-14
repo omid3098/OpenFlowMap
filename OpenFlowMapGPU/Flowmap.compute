@@ -3,6 +3,7 @@
 // Texture to write data to
 RWTexture2D<float4> Result;
 uint Resolution;
+float Radius;
 
 // Create a computebuffer to store the position of the spheres
 struct Sphere
@@ -46,7 +47,7 @@ void CSMain (uint3 id : SV_DispatchThreadID)
 {
     // Create a circle at the middle of the texture
     float2 p = float2(Resolution / 2, Resolution / 2);
-    float d = CircleSDF(id.xy, p, Resolution / 4);
+    float d = CircleSDF(id.xy, p, Resolution / 4 * Radius);
     d = clamp(d, 0, 1);
     Result[id.xy] = float4(d, d, d, 1);
 

@@ -89,6 +89,7 @@ public class OpenFlowMapGPU : MonoBehaviour
         // // create buffer with spheres
         // sphereBuffer.SetData(spheres);
         // computeShader.SetBuffer(0, "Spheres", sphereBuffer);
+        computeShader.SetFloat("Radius", radius);
         computeShader.Dispatch(0, (int)resolutionEnum / 8, (int)resolutionEnum / 8, 1);
         // GetComponent<Renderer>().material.SetTexture("_FlowMap", texture);
     }
