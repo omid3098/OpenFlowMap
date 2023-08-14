@@ -25,9 +25,7 @@ public class OpenFlowmap : MonoBehaviour
     public void InitializeFlowmapPoints()
     {
         Flowmap = new Flowmap((int)resolutionEnum);
-        // Debug.Log("Initializing flowmap points");
 
-        // Get the MeshRenderer component
         m_meshRenderer = GetComponent<MeshRenderer>();
 
         if (m_showFlowMaterial)
@@ -73,37 +71,9 @@ public class OpenFlowmap : MonoBehaviour
 
             }
         }
-
-
-        // int index = 0;
-        // foreach (var point in m_flowmap.FlowmapPoints)
-        // {
-        //     var pointPosition = GetPointPosition(point.x, point.y);
-        //     int hitCount = Physics.OverlapSphereNonAlloc(pointPosition, radius, m_hitColliders, layerMask);
-        //     Color color;
-        //     if (hitCount > 0)
-        //     {
-        //         Collider[] hits = new Collider[hitCount];
-        //         System.Array.Copy(m_hitColliders, hits, hitCount);
-        //         color = GetFlowDirectionColor(hits, pointPosition);
-        //     }
-        //     else
-        //     {
-        //         color = new Color(0.5f, 0.5f, 0, 1);
-        //     }
-        //     // m_flowmap.FlowmapColors[index++] = color;
-        //     m_flowmap.SetFlowmapColor((int)point.x, (int)point.y, color);
-        // }
     }
 
     private void VisualizeFlowmap()
-    {
-        UpdateMaterialTexture();
-    }
-
-
-    // Update the plane's material texture with the flowmap texture
-    private void UpdateMaterialTexture()
     {
         // Check if the MeshRenderer and material exist
         if (m_meshRenderer != null && m_meshRenderer.sharedMaterial != null)
@@ -140,7 +110,7 @@ public class OpenFlowmap : MonoBehaviour
         return new Color(0.5f, 0.5f, 0, 1); // Default color if no colliders are hit
     }
 
-
+    // TODO: Move this calculations in compute shader
     public Vector3 GetPointPosition(float x, float y)
     {
         // calculate the point's position and rotation to keep it aligned with the plane
