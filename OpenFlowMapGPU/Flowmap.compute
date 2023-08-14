@@ -45,13 +45,14 @@ float BoxSDF (float2 p, float2 c, float2 b)
 [numthreads(8, 8, 1)]
 void CSMain (uint3 id : SV_DispatchThreadID)
 {
+/*
     // Create a circle at the middle of the texture
     float2 p = float2(Resolution / 2, Resolution / 2);
     float d = CircleSDF(id.xy, p, Resolution / 4 * Radius);
     d = clamp(d, 0, 1);
     Result[id.xy] = float4(d, d, d, 1);
+*/
 
-/*
     float d = 1000;
     float2 p = id.xy;
 
@@ -61,14 +62,15 @@ void CSMain (uint3 id : SV_DispatchThreadID)
         d = min(d, CircleSDF(p, Spheres[i].position, Spheres[i].radius));
     }
 
+/*
     // Evaluate boxes
     for (i = 0; i < Boxes.Length; i++)
     {
         float2 rotatedP = Rotate(p - Boxes[i].position, -Boxes[i].rotation);
         d = min(d, BoxSDF(rotatedP, float2(0, 0), Boxes[i].size));
     }
+*/
     
     d = clamp(d, 0, 1);
     Result[id.xy] = float4(d, d, d, 1);
-    */
 }

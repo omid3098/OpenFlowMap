@@ -11,6 +11,7 @@ public class OpenFlowMapGPU : MonoBehaviour
     private RenderTexture texture;
     private Collider myCollider;
     private Collider[] colliders;
+    private Sphere[] spheres;
     private int resolution;
     private ComputeBuffer sphereBuffer;
 
@@ -22,22 +23,48 @@ public class OpenFlowMapGPU : MonoBehaviour
 
     private void Awake()
     {
+        resolution = (int)resolutionEnum;
+
         myCollider = GetComponent<Collider>();
         // detect all colliders colliding with this plane (a plane with Collider) and add them to the list
         colliders = GetIntersectingColliders();
 
+        // Create sphere struct array for each collider
+        spheres = CreateSpheres(colliders);
 
-        resolution = (int)resolutionEnum;
+        // create buffer with spheres
+        sphereBuffer = new ComputeBuffer(spheres.Length, sizeof(float) * 3);
+
+
         texture = CreateTempTexture(resolution);
 
-        sphereBuffer = new ComputeBuffer(colliders.Length, sizeof(float) * 3);
         computeShader.SetInt("Resolution", resolution);
         computeShader.SetTexture(0, "Result", texture);
-
 
         // set texture to material
         GetComponent<Renderer>().material.SetTexture("_FlowMap", texture);
 
+    }
+
+    private Sphere[] CreateSpheres(Collider[] colliders)
+    {
+        // create array of spheres with positions and radii of colliding objects
+        Sphere[] spheres = new Sphere[colliders.Length];
+        for (int i = 0; i < colliders.Length; i++)
+        {
+            // find position of collider in texture space
+            Vector3 pos = colliders[i].transform.position - myCollider.bounds.min;
+            // convert position to texture space
+            pos = new Vector2(pos.x / myCollider.bounds.size.x * resolution, pos.z / myCollider.bounds.size.z * resolution);
+            var flippedY = resolution - pos.y - 1;
+            var flippedX = resolution - pos.x - 1;
+            spheres[i].position = new Vector2(flippedX, flippedY);
+
+            // calculate radius of sphere. radius value is in pixels and we need to convert it to world space
+            var colliderSize = colliders[i].bounds.extents.x / myCollider.bounds.size.x * resolution;
+            spheres[i].radius = colliderSize * radius;
+        }
+        return spheres;
     }
 
     private void OnDisable()
@@ -71,25 +98,13 @@ public class OpenFlowMapGPU : MonoBehaviour
 
     private void Update()
     {
-        // // create array of spheres with positions and radii of colliding objects
-        // Sphere[] spheres = new Sphere[colliders.Length];
-        // for (int i = 0; i < colliders.Length; i++)
-        // {
-        //     Vector3 pos = colliders[i].transform.position - myCollider.bounds.min;
-        //     pos = new Vector2(pos.x / myCollider.bounds.size.x * resolution, pos.z / myCollider.bounds.size.z * resolution);
-        //     var flippedY = resolution - pos.y - 1;
-        //     var flippedX = resolution - pos.x - 1;
-        //     spheres[i].position = new Vector2(flippedX, flippedY);
-
-        //     // calculate radius of sphere. radius value is in pixels and we need to convert it to world space
-        //     var colliderSize = colliders[i].bounds.extents.x / myCollider.bounds.size.x * resolution;
-        //     spheres[i].radius = colliderSize * radius;
-        // }
-        // computeShader.SetFloat("Radius", radius);
-        // // create buffer with spheres
-        // sphereBuffer.SetData(spheres);
-        // computeShader.SetBuffer(0, "Spheres", sphereBuffer);
-        computeShader.SetFloat("Radius", radius);
+        // update sphere positions
+        spheres = CreateSpheres(colliders);
+        // set sphere buffer data
+        sphereBuffer.SetData(spheres);
+        // set sphere buffer to compute shader
+        computeShader.SetBuffer(0, "Spheres", sphereBuffer);
+        // dispatch compute shader
         computeShader.Dispatch(0, (int)resolutionEnum / 8, (int)resolutionEnum / 8, 1);
         // GetComponent<Renderer>().material.SetTexture("_FlowMap", texture);
     }
