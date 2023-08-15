@@ -33,6 +33,9 @@
     "m_CategoryData": [
         {
             "m_Id": "26526fb5d615424ca9c0e8e34aa60d44"
+        },
+        {
+            "m_Id": "8c8c71c83645430c987a965354828d6a"
         }
     ],
     "m_Nodes": [
@@ -1434,7 +1437,7 @@
     "m_RefNameGeneratedByDisplayName": "FlowMap",
     "m_DefaultReferenceName": "_FlowMap",
     "m_OverrideReferenceName": "",
-    "m_GeneratePropertyBlock": false,
+    "m_GeneratePropertyBlock": true,
     "m_UseCustomSlotLabel": false,
     "m_CustomSlotLabel": "",
     "m_DismissedVersion": 0,
@@ -1483,9 +1486,6 @@
     "m_Name": "",
     "m_ChildObjectList": [
         {
-            "m_Id": "1e80715dfc8b4ad299503a3da02d8295"
-        },
-        {
             "m_Id": "163ff3dfa2c04864b34453a1a879b4db"
         },
         {
@@ -1502,9 +1502,6 @@
         },
         {
             "m_Id": "b5548abd2ccf4cce84306c281b366e7a"
-        },
-        {
-            "m_Id": "65afbbaa58a545a38ff014e8195dd33e"
         }
     ]
 }
@@ -3187,6 +3184,21 @@
     "m_Value": 0.0,
     "m_DefaultValue": 0.0,
     "m_Labels": []
+}
+
+{
+    "m_SGVersion": 0,
+    "m_Type": "UnityEditor.ShaderGraph.CategoryData",
+    "m_ObjectId": "8c8c71c83645430c987a965354828d6a",
+    "m_Name": "AutoUpdate",
+    "m_ChildObjectList": [
+        {
+            "m_Id": "65afbbaa58a545a38ff014e8195dd33e"
+        },
+        {
+            "m_Id": "1e80715dfc8b4ad299503a3da02d8295"
+        }
+    ]
 }
 
 {

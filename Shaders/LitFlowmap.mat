@@ -90,19 +90,19 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _FlowStrenght: 0.17
+    - _FlowStrenght: 0.52
     - _Metalic: 0
-    - _NormalStrenght: 0.16
+    - _NormalStrenght: 0.22
     - _QueueControl: 0
     - _QueueOffset: 0
-    - _Scale: 2.2
+    - _Scale: 3.1
     - _Smoothness: 1
-    - _Speed: 1
+    - _Speed: 1.75
     - _T: 0.1
     - _UseTexture: 1
     m_Colors:
     - _Color: {r: 0.273436, g: 0.347, b: 0.30408767, a: 0}
-    - _FlowDirection: {r: 0, g: 1, b: 0, a: 0}
+    - _FlowDirection: {r: 0, g: 0, b: 0, a: 0}
   m_BuildTextureStacks: []
 --- !u!114 &5682942639087496188
 MonoBehaviour:

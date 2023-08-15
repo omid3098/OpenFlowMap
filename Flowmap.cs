@@ -6,10 +6,13 @@ public class Flowmap
     public int Resolution { get; }
     private Color[] FlowmapColors { get; }
     private Texture2D FlowmapTexture { get; }
+    private Vector2 direction;
 
-    public Flowmap(int resolution)
+    public Flowmap(int resolution, Vector2 flowDirections)
     {
         Resolution = resolution;
+        direction = flowDirections;
+
         FlowmapColors = new Color[resolution * resolution];
         FlowmapTexture = new Texture2D(resolution, resolution, TextureFormat.RG32, false, true)
         {

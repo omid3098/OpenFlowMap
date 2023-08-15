@@ -10,12 +10,10 @@ public class OpenFlowmap : MonoBehaviour
     [Range(0.1f, 1)] public float radius = 0.2f;
     public LayerMask layerMask;
 
-    [SerializeField] bool m_showFlowMaterial = true;
+    [SerializeField] Vector2 m_flowDirection = Vector2.zero;
 
     private MeshRenderer m_meshRenderer;
     private MeshFilter m_meshFilter;
-    private Material m_unlitFlowMaterial;
-    private Material m_previusMaterial;
     private Collider[] m_hitColliders = new Collider[5];
 
     public Flowmap Flowmap;
@@ -25,28 +23,15 @@ public class OpenFlowmap : MonoBehaviour
 
     public void InitializeFlowmapPoints()
     {
-        Flowmap = new Flowmap((int)resolutionEnum);
-
+        Flowmap = new Flowmap((int)resolutionEnum, m_flowDirection);
         m_meshRenderer = GetComponent<MeshRenderer>();
-
-        if (m_showFlowMaterial)
-        {
-            // store the previous material to restore it later if it already exists
-            if (m_previusMaterial != null) m_previusMaterial = m_meshRenderer.sharedMaterial;
-            else if (m_meshRenderer.sharedMaterial != null) m_previusMaterial = m_meshRenderer.sharedMaterial;
-
-            // find Shader: OpenFlowmap/UnlitFlowmap and create a new material
-            m_unlitFlowMaterial = new Material(Shader.Find("OpenFlowmap/UnlitFlowmap"));
-            m_meshRenderer.sharedMaterial = m_unlitFlowMaterial;
-        }
-
         m_meshFilter = GetComponent<MeshFilter>();
     }
 
     private void Update()
     {
         GetFlowPoints();
-        if (m_showFlowMaterial) VisualizeFlowmap();
+        UpdateMaterialProperties();
     }
 
 
@@ -59,29 +44,22 @@ public class OpenFlowmap : MonoBehaviour
                 var pointPosition = GetPointPosition(x, y);
                 int hitCount = Physics.OverlapSphereNonAlloc(pointPosition, radius, m_hitColliders, layerMask);
                 Color color;
-                if (hitCount > 0)
-                {
-                    Collider[] hits = new Collider[hitCount];
-                    System.Array.Copy(m_hitColliders, hits, hitCount);
-                    color = GetFlowDirectionColor(hits, pointPosition);
-                }
-                else
-                {
-                    color = new Color(0.5f, 0.5f, 0, 1);
-                }
+                Collider[] hits = new Collider[hitCount];
+                System.Array.Copy(m_hitColliders, hits, hitCount);
+                color = GetFlowDirectionColor(hits, pointPosition);
                 Flowmap.SetColor(x, y, color);
-
             }
         }
     }
 
-    private void VisualizeFlowmap()
+    private void UpdateMaterialProperties()
     {
         // Check if the MeshRenderer and material exist
         if (m_meshRenderer != null && m_meshRenderer.sharedMaterial != null)
         {
             // Assign the flowmap texture to the material's main texture
             m_meshRenderer.sharedMaterial.SetTexture("_FlowMap", Flowmap.GetTexture());
+            m_meshRenderer.sharedMaterial.SetVector("_FlowDirection", m_flowDirection);
         }
         else
         {
@@ -91,21 +69,21 @@ public class OpenFlowmap : MonoBehaviour
 
     public Color GetFlowDirectionColor(Collider[] hitColliders, Vector3 pointPosition)
     {
+        // Debug.DrawLine(pointPosition, pointPosition + Vector3.up * 0.2f, Color.red);
+
         Vector2 sumDirection = Vector2.zero;
         for (int i = 0; i < hitColliders.Length; i++)
         {
-            Vector3 closestPoint = Vector3.zero;
-            Vector2 direction = Vector2.zero;
+            Vector2 direction;
             if (hitColliders[i] is not TerrainCollider)
             {
-                closestPoint = hitColliders[i].ClosestPoint(pointPosition);
+                Vector3 closestPoint = hitColliders[i].ClosestPoint(pointPosition);
 
                 float distanceToCollider = Vector3.Distance(pointPosition, closestPoint);
                 float strength = 1f - Mathf.Clamp01(distanceToCollider / radius);
                 direction = new Vector2(pointPosition.x - closestPoint.x, pointPosition.z - closestPoint.z);
                 direction.Normalize();
                 direction *= strength;
-                // Debug.Log("OtherColliders: " + Vector3.Distance(pointPosition, closestPoint));
             }
             else
             {
@@ -142,9 +120,14 @@ public class OpenFlowmap : MonoBehaviour
         {
             Vector2 averageDirection = sumDirection / hitColliders.Length;
             averageDirection += Vector2.one / 2f;
-            return new Color(averageDirection.x, averageDirection.y, 0, 1);
+            // modify the average direction based on the flow direction
+            averageDirection += m_flowDirection;
+            Color color = new Color(averageDirection.x, averageDirection.y, 0, 1);
+            return color;
         }
-        return new Color(0.5f, 0.5f, 0, 1); // Default color if no colliders are hit
+        var defaultDirection = new Vector2(0.5f, 0.5f);
+        defaultDirection += m_flowDirection;
+        return new Color(defaultDirection.x, defaultDirection.y, 0, 1);
     }
 
     public static Color ConvertDirectionToColor(Vector2 direction)
@@ -179,12 +162,6 @@ public class OpenFlowmap : MonoBehaviour
         Vector3 point = transform.TransformPoint(pointX, pointY, pointZ);
         return point;
     }
-
-    public Vector3 GetBounds()
-    {
-        return m_meshFilter.sharedMesh.bounds.size;
-    }
-
 
 #if UNITY_EDITOR
     public void BakeFlowmapTexture()
@@ -221,12 +198,6 @@ public class OpenFlowmap : MonoBehaviour
         {
             Flowmap.Dispose();
             Flowmap = null;
-        }
-        // destroy the material
-        if (m_unlitFlowMaterial != null)
-        {
-            DestroyImmediate(m_unlitFlowMaterial);
-            m_unlitFlowMaterial = null;
         }
     }
 
