@@ -41,7 +41,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Normal:
-        m_Texture: {fileID: 2800000, guid: 878f17639c427564f808ae854aab6337, type: 3}
+        m_Texture: {fileID: 2800000, guid: 59d9f41b9e6e1634e92933a258d55678, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _SampleReflectedCubemap_24d555a0e365440a9388e82d75294c7f_Cube_1_Cubemap:
@@ -90,19 +90,19 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _FlowStrenght: 0.172
+    - _FlowStrenght: 0.17
     - _Metalic: 0
-    - _NormalStrenght: 0.172
+    - _NormalStrenght: 0.16
     - _QueueControl: 0
     - _QueueOffset: 0
-    - _Scale: 2.59
+    - _Scale: 2.2
     - _Smoothness: 1
     - _Speed: 1
     - _T: 0.1
     - _UseTexture: 1
     m_Colors:
     - _Color: {r: 0.273436, g: 0.347, b: 0.30408767, a: 0}
-    - _FlowDirection: {r: 1, g: 0, b: 0, a: 0}
+    - _FlowDirection: {r: 0, g: 1, b: 0, a: 0}
   m_BuildTextureStacks: []
 --- !u!114 &5682942639087496188
 MonoBehaviour:

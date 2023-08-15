@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -15,7 +16,7 @@ public class OpenFlowmap : MonoBehaviour
     private MeshFilter m_meshFilter;
     private Material m_unlitFlowMaterial;
     private Material m_previusMaterial;
-    private Collider[] m_hitColliders = new Collider[3];
+    private Collider[] m_hitColliders = new Collider[5];
 
     public Flowmap Flowmap;
 
@@ -47,6 +48,7 @@ public class OpenFlowmap : MonoBehaviour
         GetFlowPoints();
         if (m_showFlowMaterial) VisualizeFlowmap();
     }
+
 
     public void GetFlowPoints()
     {
@@ -92,13 +94,48 @@ public class OpenFlowmap : MonoBehaviour
         Vector2 sumDirection = Vector2.zero;
         for (int i = 0; i < hitColliders.Length; i++)
         {
-            Vector3 closestPoint = hitColliders[i].ClosestPoint(pointPosition);
-            float distanceToCollider = Vector3.Distance(pointPosition, closestPoint);
-            float strength = 1f - Mathf.Clamp01(distanceToCollider / radius);
+            Vector3 closestPoint = Vector3.zero;
+            Vector2 direction = Vector2.zero;
+            if (hitColliders[i] is not TerrainCollider)
+            {
+                closestPoint = hitColliders[i].ClosestPoint(pointPosition);
 
-            Vector2 direction = new Vector2(pointPosition.x - closestPoint.x, pointPosition.z - closestPoint.z);
-            direction.Normalize();
-            direction *= strength;
+                float distanceToCollider = Vector3.Distance(pointPosition, closestPoint);
+                float strength = 1f - Mathf.Clamp01(distanceToCollider / radius);
+                direction = new Vector2(pointPosition.x - closestPoint.x, pointPosition.z - closestPoint.z);
+                direction.Normalize();
+                direction *= strength;
+                // Debug.Log("OtherColliders: " + Vector3.Distance(pointPosition, closestPoint));
+            }
+            else
+            {
+                // for this position, we need to find the terrain height at that point and create the terrain position
+                // Debug.DrawLine(logStartPos, logEndPos, logColor);
+                var terrain = hitColliders[i].GetComponent<Terrain>();
+                var terrainHeightAtPoint = terrain.SampleHeight(pointPosition) + terrain.transform.position.y;
+
+                Vector3 terrainPositionAtPoint = new Vector3(pointPosition.x, terrainHeightAtPoint, pointPosition.z);
+
+                var flowStrenght = terrainPositionAtPoint - pointPosition;
+                if (flowStrenght.y > 0) flowStrenght.y = 0;
+
+                // calculate the direction of the flow based on the terrain normal
+                var terrainNormal = terrain.terrainData.GetInterpolatedNormal((pointPosition.x - terrain.transform.position.x) / terrain.terrainData.size.x, (pointPosition.z - terrain.transform.position.z) / terrain.terrainData.size.z);
+                // now we need to project the terrain normal on the xz plane
+                terrainNormal.y = 0;
+                terrainNormal.Normalize();
+                // now we need to calculate the strength of the flow based on the terrain normal
+
+                // Using the terrainNormal and flowStrenght (distance to seashore) to calculate direction and strength
+                var directionFromNormal = new Vector2(terrainNormal.x, terrainNormal.z);
+                float distanceFactor = 1f - Mathf.Clamp01(flowStrenght.magnitude / radius); // Normalize the distance to seashore within [0, 1]
+
+                // Calculate the strength based on the distance to the seashore
+                float strength = Mathf.Lerp(0f, 1f, distanceFactor);
+
+                // Combine the direction and strength
+                direction = directionFromNormal * strength;
+            }
             sumDirection += direction;
         }
         if (hitColliders.Length > 0)
@@ -110,7 +147,28 @@ public class OpenFlowmap : MonoBehaviour
         return new Color(0.5f, 0.5f, 0, 1); // Default color if no colliders are hit
     }
 
+    public static Color ConvertDirectionToColor(Vector2 direction)
+    {
+        direction += Vector2.one / 2f;
+        return new Color(direction.x, direction.y, 0, 1);
+    }
+
+    public static Vector2 ConvertColorToDirection(Color color)
+    {
+        return new Vector2(color.r - 0.5f, color.g - 0.5f);
+    }
+
     // TODO: Move this calculations in compute shader
+    /// <summary>
+    /// Returns the position of a point in world space
+    /// </summary>
+    /// <param name="x">The x coordinate of the point in the flowmap</param>
+    /// <param name="y">The y coordinate of the point in the flowmap</param>
+    /// <returns> The position of the flowmap point in world space</returns>
+    /// <remarks>
+    /// The flowmap is a 2D texture that is mapped to the mesh. The flowmap's resolution is the same as the mesh's resolution.
+    /// The flowmap's origin is at the bottom left corner of the mesh. The flowmap's x axis is mapped to the mesh's x axis and the flowmap's y axis is mapped to the mesh's z axis.
+    /// </remarks>
     public Vector3 GetPointPosition(float x, float y)
     {
         // calculate the point's position and rotation to keep it aligned with the plane
@@ -120,6 +178,11 @@ public class OpenFlowmap : MonoBehaviour
         float pointZ = y * bounds.z / Flowmap.Resolution - bounds.z / 2f;
         Vector3 point = transform.TransformPoint(pointX, pointY, pointZ);
         return point;
+    }
+
+    public Vector3 GetBounds()
+    {
+        return m_meshFilter.sharedMesh.bounds.size;
     }
 
 
@@ -135,6 +198,9 @@ public class OpenFlowmap : MonoBehaviour
 
         UnityEditor.AssetDatabase.Refresh();
         UnityEditor.TextureImporter textureImporter = UnityEditor.AssetImporter.GetAtPath(filePath) as UnityEditor.TextureImporter;
+        // set texture type to normal map
+        textureImporter.textureType = UnityEditor.TextureImporterType.NormalMap;
+
         textureImporter.sRGBTexture = false;
         textureImporter.alphaSource = UnityEditor.TextureImporterAlphaSource.None;
         textureImporter.wrapMode = TextureWrapMode.Clamp;
