@@ -14,7 +14,7 @@ public class Flowmap
         direction = flowDirections;
 
         FlowmapColors = new Color[resolution * resolution];
-        FlowmapTexture = new Texture2D(resolution, resolution, TextureFormat.RG32, false, true)
+        FlowmapTexture = new Texture2D(resolution, resolution, TextureFormat.RG32, false, false)
         {
             filterMode = FilterMode.Bilinear,
             wrapMode = TextureWrapMode.Clamp

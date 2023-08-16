@@ -88,7 +88,6 @@ public class OpenFlowmap : MonoBehaviour
             else
             {
                 // for this position, we need to find the terrain height at that point and create the terrain position
-                // Debug.DrawLine(logStartPos, logEndPos, logColor);
                 var terrain = hitColliders[i].GetComponent<Terrain>();
                 var terrainHeightAtPoint = terrain.SampleHeight(pointPosition) + terrain.transform.position.y;
 
