@@ -33,8 +33,8 @@ public class RayLine
         Origin = origin;
         LayerMask = layerMask;
         ChaosAngle = chaosAngle;
-        StartPoint = origin + new Vector3(startPoint.x, origin.y, startPoint.y);
-        EndPoint = origin + new Vector3(endPoint.x, origin.y, endPoint.y);
+        StartPoint = new Vector3(startPoint.x, origin.y, startPoint.y);
+        EndPoint = new Vector3(endPoint.x, origin.y, endPoint.y);
         var lineLength = Vector3.Distance(StartPoint, EndPoint);
         m_stepLength = lineLength / resolution;
         Resolution = resolution;
@@ -88,7 +88,7 @@ public class RayLine
         {
             // Visualize the ray to the end of the bounds
             Vector3 newStartPoint = startPoint + direction * m_stepLength;
-            // Logger.DrawRay(startPoint, direction, Color.green);
+            Logger.DrawRay(startPoint, direction, Color.blue);
             if (Vector3.Distance(newStartPoint, Origin) < Radius)
             {
                 CastRay(newStartPoint, direction);
