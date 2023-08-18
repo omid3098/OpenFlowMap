@@ -743,7 +743,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 624761090}
-  m_Layer: 0
+  m_Layer: 4
   m_Name: FlowDirection
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -758,13 +758,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 624761089}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0.009590318, z: -0, w: 0.999954}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 706720404}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: -1.099, z: 0}
 --- !u!1 &706720399
 GameObject:
   m_ObjectHideFlags: 0
@@ -778,7 +778,7 @@ GameObject:
   - component: {fileID: 706720402}
   - component: {fileID: 706720401}
   - component: {fileID: 706720400}
-  m_Layer: 0
+  m_Layer: 4
   m_Name: Plane
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -797,13 +797,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d1eeec92b2106ee4ba0d808dad1fe253, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  resolutionEnum: 256
-  layerMask:
+  textureResolution: 128
+  m_layerMask:
     serializedVersion: 2
     m_Bits: 16
   m_flowDirectionTransform: {fileID: 624761090}
-  m_chaosAngle: 10.8
+  m_chaosAngle: 15
   m_drawGizmos: 0
+  m_numberOfRays: 179
+  m_radius: 5
 --- !u!64 &706720401
 MeshCollider:
   m_ObjectHideFlags: 0

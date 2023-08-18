@@ -92,7 +92,7 @@ Material:
     m_Floats:
     - _FlowStrenght: 0.52
     - _Metalic: 0
-    - _NormalStrenght: 0.22
+    - _NormalStrenght: 0
     - _QueueControl: 0
     - _QueueOffset: 0
     - _Scale: 3.1
