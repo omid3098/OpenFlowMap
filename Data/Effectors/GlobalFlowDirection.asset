@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ec85c84fa98e17c4cb06543136d97370, type: 3}
   m_Name: GlobalFlowDirection
   m_EditorClassIdentifier: 
-  m_flowDirection: {x: 1, y: 0}
+  m_flowDirection: {x: 0, y: 0}
   m_flowStrenght: 0.5

@@ -14,6 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   LayerMask:
     serializedVersion: 2
-    m_Bits: 0
-  m_rayCount: 100
-  m_effectors: []
+    m_Bits: 16
+  m_rayCount: 120
+  m_rayLenght: 0.268
+  m_effectors:
+  - {fileID: 11400000, guid: 8b6859e7d793fbb4ea0427e14c5e1c20, type: 2}
+  - {fileID: 11400000, guid: 2f7986c436f7bce4887375ec31fd3dff, type: 2}
+  - {fileID: 11400000, guid: 222d1598305193a46b01cf95ec063ea1, type: 2}

@@ -25,7 +25,7 @@ Material:
     serializedVersion: 3
     m_TexEnvs:
     - _FlowMap:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: 7a6f46daa47e3754f9bf31d6ce54c1d4, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _SampleCubemap_f6e1e1bc6ca648d4a661af284df99e70_Cube_1_Cubemap:
@@ -62,14 +62,17 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _DistortionScale: 2.23
-    - _DistortionStrenght: 0.057
+    - _DistortionScale: 1.69
+    - _DistortionStrenght: 0.0422
     - _Float: 0.17
-    - _FlowStrenght: 0.062
+    - _FlowStrenght: 0.085
     - _NormalStrenght: 0.5
     - _QueueControl: 0
     - _QueueOffset: 0
+    - _ShoreLine: 4
     - _Strenght: 0.03
+    - _T: -0.31
+    - _WaterDepth: 0
     - _t: 0.54
     m_Colors:
     - _FlowDirection: {r: 0, g: 0, b: 0, a: 0}

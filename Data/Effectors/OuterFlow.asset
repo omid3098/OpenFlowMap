@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 15c26e349f5ea0d49a66ce37b2bf107f, type: 3}
   m_Name: OuterFlow
   m_EditorClassIdentifier: 
-  m_radius: 0.5
-  ourerFlowRayCount: 12
+  m_radius: 0.31
+  ourerFlowRayCount: 20

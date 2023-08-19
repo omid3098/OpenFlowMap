@@ -9,6 +9,7 @@ public class OpenFlowmap : ScriptableObject
     public int RayCount => m_rayCount;
 
     [SerializeField] int m_rayCount = 100;
+    [SerializeField, Range(0f, 1f)] float m_rayLenght = 0.5f;
     private RayProjector m_rayProjector;
     [SerializeField] Effector[] m_effectors;
     private Vector3 m_size;
@@ -26,7 +27,12 @@ public class OpenFlowmap : ScriptableObject
 
     public void Initialize()
     {
-        m_rayProjector = new RayProjector(m_size, m_plane, m_planeOrigin, m_rayCount);
+        m_rayProjector = new RayProjector(
+            m_size,
+            m_plane,
+            m_planeOrigin,
+            m_rayCount,
+            m_rayLenght);
         for (int i = 0; i < m_effectors.Length; i++)
         {
             Effector effector = m_effectors[i];
