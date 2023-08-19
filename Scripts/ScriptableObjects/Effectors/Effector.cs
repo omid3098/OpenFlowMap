@@ -1,7 +1,6 @@
-using System;
 using UnityEngine;
 
-public abstract class Effector : MonoBehaviour
+public abstract class Effector : ScriptableObject
 {
     protected OpenFlowmap openFlowmap;
     public void Register(OpenFlowmap openFlowmap)

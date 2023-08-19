@@ -1,10 +1,11 @@
 using UnityEngine;
 
-public class BakeTexture : Effector
+[CreateAssetMenu(fileName = "GetTexture", menuName = "OpenFlowmap/GetTexture")]
+public class GetTexture : Effector
 {
     public enum Resolution { _32x32 = 32, _64x64 = 64, _128x128 = 128, _256x256 = 256, _512x512 = 512, _1024x1024 = 1024 }
     public Resolution m_textureResolution = Resolution._128x128;
-    [SerializeField] private Texture2D m_texture;
+    [SerializeField] public Texture2D m_texture;
     internal override void Execute()
     {
         // Debug.Log("BakeTexture" + m_textureResolution);

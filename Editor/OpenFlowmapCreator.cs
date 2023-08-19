@@ -21,14 +21,13 @@ public class OpenFlowmapCreator
 
         var _collider = flowmapObject.AddComponent<BoxCollider>();
 
-        flowmapObject.AddComponent<OuterFlow>();
-        flowmapObject.AddComponent<GlobalFlowDirection>();
+        // flowmapObject.AddComponent<OuterFlow>();
+        // flowmapObject.AddComponent<GlobalFlowDirection>();
 
 
         // Add the OpenFlowmap component to the GameObject
-        var _flowmap = flowmapObject.AddComponent<OpenFlowmap>();
-        _flowmap.LayerMask = LayerMask.GetMask("Water");
-        _flowmap.Initialize();
+        var _flowmapBehaviour = flowmapObject.AddComponent<OpenFlowmapBehaviour>();
+        _flowmapBehaviour.Initialize();
 
 
         // Set the new GameObject as the active selection in the Editor

@@ -1,5 +1,5 @@
 using UnityEngine;
-
+[CreateAssetMenu(fileName = "GlobalFlowDirection", menuName = "OpenFlowmap/GlobalFlowDirection")]
 public class GlobalFlowDirection : Effector
 {
     [SerializeField] Vector2 m_flowDirection = new Vector2(1, 0);
@@ -13,7 +13,7 @@ public class GlobalFlowDirection : Effector
         {
             Ray ray = rays[i];
             // push the ray in the direction of the flow
-            ray.direction = Vector3.Lerp(ray.direction, m_flowDirection, m_flowStrenght);
+            ray.direction = Vector3.Lerp(ray.direction, new Vector3(m_flowDirection.x, 0, m_flowDirection.y), m_flowStrenght);
             ray.direction.Normalize();
             rays[i] = ray;
         }

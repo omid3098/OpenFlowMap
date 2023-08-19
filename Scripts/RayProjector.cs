@@ -5,38 +5,35 @@ public class RayProjector
 {
     private Ray[] m_rays;
     private int m_rayCount;
-    private Transform m_transform;
     private Vector2 m_size;
+    private Plane m_plane;
+    private Vector3 m_planeOrigin;
 
-    public RayProjector(Transform transform, Vector3 size, int rayCount)
+    public RayProjector(Vector3 size, Plane plane, Vector3 planeOrigin, int rayCount)
     {
         m_rayCount = rayCount;
+        m_plane = plane;
+        m_planeOrigin = planeOrigin;
         m_rays = new Ray[rayCount * rayCount];
-        m_transform = transform;
         m_size = new Vector2(size.x, size.z);
-        InitializeRays();
+        InitializeRaysAlongPlane();
     }
 
-    private void InitializeRays()
+    private void InitializeRaysAlongPlane()
     {
-        for (int x = 0; x < m_rayCount; x++)
+        var rayIndex = 0;
+        var raySpacing = m_size / m_rayCount;
+        var rayOrigin = m_planeOrigin - new Vector3(m_size.x / 2, 0, m_size.y / 2) + new Vector3(raySpacing.x / 2, 0, raySpacing.y / 2);
+        for (int i = 0; i < m_rayCount; i++)
         {
-            for (int y = 0; y < m_rayCount; y++)
+            for (int j = 0; j < m_rayCount; j++)
             {
-                var pixelPosition = new Vector2(
-                    (x + 0.5f) / m_rayCount * m_size.x,
-                    (y + 0.5f) / m_rayCount * m_size.y
-                );
-                var worldPosition = m_transform.TransformPoint(new Vector3(
-                    pixelPosition.x - m_size.x / 2f,
-                    0,
-                    pixelPosition.y - m_size.y / 2f
-                ));
-                var direction = m_transform.up;
-                m_rays[x * m_rayCount + y] = new Ray(worldPosition, direction);
+                var ray = new Ray(rayOrigin + new Vector3(raySpacing.x * i, 0, raySpacing.y * j), m_plane.normal);
+                m_rays[rayIndex++] = ray;
             }
         }
     }
+
 
     public void Draw()
     {
