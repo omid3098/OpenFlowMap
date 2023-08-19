@@ -6,6 +6,7 @@ public class OpenFlowmap : ScriptableObject
     public LayerMask LayerMask;
     internal RayProjector RayProjector => m_rayProjector;
     internal int RayResolution => m_rayCount;
+    public int RayCount => m_rayCount;
 
     [SerializeField] int m_rayCount = 100;
     private RayProjector m_rayProjector;
