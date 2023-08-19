@@ -12,7 +12,6 @@ public class OpenFlowmap : MonoBehaviour
     private MeshFilter m_meshFilter;
     private RayProjector m_rayProjector;
     [SerializeField] Effector[] m_effectors;
-
     private void Awake()
     {
         m_meshFilter = GetComponent<MeshFilter>();
@@ -40,6 +39,11 @@ public class OpenFlowmap : MonoBehaviour
     private void Update()
     {
         m_rayProjector.Draw();
+        if (transform.hasChanged)
+        {
+            transform.hasChanged = false;
+            Initialize();
+        }
     }
 
 
