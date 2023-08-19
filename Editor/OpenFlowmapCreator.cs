@@ -22,6 +22,7 @@ public class OpenFlowmapCreator
         var _collider = flowmapObject.AddComponent<BoxCollider>();
 
         flowmapObject.AddComponent<OuterFlow>();
+        flowmapObject.AddComponent<GlobalFlowDirection>();
 
 
         // Add the OpenFlowmap component to the GameObject

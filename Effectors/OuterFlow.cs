@@ -1,11 +1,10 @@
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class OuterFlow : Effector
 {
-    [Range(0.1f, 2)] public float m_radius = 0.2f;
-    [Range(4, 30)] public int ourerFlowRayCount = 8;
+    [Range(0.1f, 2)] public float m_radius = 0.5f;
+    [Range(4, 30)] public int ourerFlowRayCount = 12;
 
     private Collider[] m_colliders;
     public override void Initialize()
@@ -13,15 +12,15 @@ public class OuterFlow : Effector
         m_colliders = new Collider[1];
     }
 
-    internal override void Execute(RayProjector m_rayProjector)
+    internal override void Execute()
     {
-        Ray[] mainRaysArray = m_rayProjector.GetRays();
+        Ray[] mainRaysArray = openFlowmap.RayProjector.GetRays();
         for (int i = 0; i < mainRaysArray.Length; i++)
         {
             Ray projectorRay = mainRaysArray[i];
             var position = projectorRay.origin;
             // use SphereOverlap to get all colliders in a radius
-            int nearbyColliders = Physics.OverlapSphereNonAlloc(position, m_radius, m_colliders, m_openFlowmap.LayerMask);
+            int nearbyColliders = Physics.OverlapSphereNonAlloc(position, m_radius, m_colliders, openFlowmap.LayerMask);
 
             if (nearbyColliders > 0)
             {
@@ -39,7 +38,7 @@ public class OuterFlow : Effector
                 {
                     // Cast ray in direction
                     var ray = new Ray(position, direction);
-                    if (Physics.Raycast(ray, out var hit, m_radius, m_openFlowmap.LayerMask))
+                    if (Physics.Raycast(ray, out var hit, m_radius, openFlowmap.LayerMask))
                     {
                         var distance = Vector3.Distance(position, hit.point);
                         // if the distance is too short, this point should effect more than the others

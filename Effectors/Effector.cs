@@ -3,20 +3,20 @@ using UnityEngine;
 
 public abstract class Effector : MonoBehaviour
 {
-    protected OpenFlowmap m_openFlowmap;
+    protected OpenFlowmap openFlowmap;
     public void Register(OpenFlowmap openFlowmap)
     {
-        m_openFlowmap = openFlowmap;
+        this.openFlowmap = openFlowmap;
     }
 
-    public abstract void Initialize();
-    internal abstract void Execute(RayProjector m_rayProjector);
+    public virtual void Initialize() { }
+    internal abstract void Execute();
 
     private void OnValidate()
     {
-        if (m_openFlowmap != null)
+        if (openFlowmap != null)
         {
-            m_openFlowmap.Initialize();
+            openFlowmap.Initialize();
         }
     }
 }
