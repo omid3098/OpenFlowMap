@@ -18,7 +18,7 @@ public class OpenFlowmapEditor : Editor
 
         if (GUILayout.Button("Bake Flowmap"))
         {
-            openFlowmap.BakeFlowmapTexture();
+            // openFlowmap.BakeFlowmapTexture();
         }
 
         // A foldout group to show debug options
@@ -47,21 +47,21 @@ public class OpenFlowmapEditor : Editor
 
     private void VisualizeFlowmap()
     {
-        if (Event.current.type == EventType.Repaint)
-        {
-            int resolution = openFlowmap.Flowmap.Resolution;
-            for (int u = 0; u < resolution; u++)
-            {
-                for (int v = 0; v < resolution; v++)
-                {
-                    var point = openFlowmap.GetPointPosition(u, v);
-                    var color = openFlowmap.Flowmap.GetColor(u, v);
-                    Vector3 direction = new Vector3(color.r - 0.5f, 0, color.g - 0.5f);
+        // if (Event.current.type == EventType.Repaint)
+        // {
+        //     int resolution = openFlowmap.Flowmap.Resolution;
+        //     for (int u = 0; u < resolution; u++)
+        //     {
+        //         for (int v = 0; v < resolution; v++)
+        //         {
+        //             var point = openFlowmap.GetPointPosition(u, v);
+        //             var color = openFlowmap.Flowmap.GetColor(u, v);
+        //             Vector3 direction = new Vector3(color.r - 0.5f, 0, color.g - 0.5f);
 
-                    Handles.color = color;
-                    Handles.DrawLine(point, point + (direction + Vector3.up) * m_vectorLength);
-                }
-            }
-        }
+        //             Handles.color = color;
+        //             Handles.DrawLine(point, point + (direction + Vector3.up) * m_vectorLength);
+        //         }
+        //     }
+        // }
     }
 }

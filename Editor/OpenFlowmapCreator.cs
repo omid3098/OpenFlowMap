@@ -15,13 +15,21 @@ public class OpenFlowmapCreator
         // assing a plane mesh to the mesh filter
         _meshFilter.sharedMesh = Resources.GetBuiltinResource<Mesh>("New-Plane.fbx");
 
+        // Create a new material
+        var _material = new Material(Shader.Find("OpenFlowmap/UnlitFlowmap"));
+        _meshRenderer.sharedMaterial = _material;
+
         var _collider = flowmapObject.AddComponent<BoxCollider>();
+
+        flowmapObject.AddComponent<OuterFlow>();
+
 
         // Add the OpenFlowmap component to the GameObject
         var _flowmap = flowmapObject.AddComponent<OpenFlowmap>();
-        _flowmap.resolutionEnum = OpenFlowmap.Resolution._128x128;
-        _flowmap.layerMask = LayerMask.GetMask("Water");
-        _flowmap.InitializeFlowmapPoints();
+        _flowmap.m_textureResolution = OpenFlowmap.Resolution._128x128;
+        _flowmap.LayerMask = LayerMask.GetMask("Water");
+        _flowmap.Initialize();
+
 
         // Set the new GameObject as the active selection in the Editor
         Selection.activeGameObject = flowmapObject;
