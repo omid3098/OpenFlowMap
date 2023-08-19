@@ -14,35 +14,35 @@ public class OpenFlowmapEditor : Editor
     {
         DrawDefaultInspector();
 
-        openFlowmap = (OpenFlowmap)target;
+        // openFlowmap = (OpenFlowmap)target;
 
-        if (GUILayout.Button("Bake Flowmap"))
-        {
-            // openFlowmap.BakeFlowmapTexture();
-        }
+        // if (GUILayout.Button("Bake Flowmap"))
+        // {
+        //     // openFlowmap.BakeFlowmapTexture();
+        // }
 
-        // A foldout group to show debug options
-        // header: "Debug"
-        m_debug = EditorGUILayout.Foldout(m_debug, "Debug");
-        if (m_debug)
-        {
-            // A toggle to show the flowmap texture
-            m_showFlowVectors = EditorGUILayout.Toggle("Show Flow Vectors", m_showFlowVectors);
-            if (m_showFlowVectors)
-            {
-                m_vectorLength = EditorGUILayout.Slider("Vector Length", m_vectorLength, 0.1f, 1);
-            }
-        }
+        // // A foldout group to show debug options
+        // // header: "Debug"
+        // m_debug = EditorGUILayout.Foldout(m_debug, "Debug");
+        // if (m_debug)
+        // {
+        //     // A toggle to show the flowmap texture
+        //     m_showFlowVectors = EditorGUILayout.Toggle("Show Flow Vectors", m_showFlowVectors);
+        //     if (m_showFlowVectors)
+        //     {
+        //         m_vectorLength = EditorGUILayout.Slider("Vector Length", m_vectorLength, 0.1f, 1);
+        //     }
+        // }
     }
 
     private void OnSceneGUI()
     {
-        if (openFlowmap == null) openFlowmap = (OpenFlowmap)target;
-        // show a button to enable visualization of the flowmap
-        if (m_showFlowVectors)
-        {
-            VisualizeFlowmap();
-        }
+        // if (openFlowmap == null) openFlowmap = (OpenFlowmap)target;
+        // // show a button to enable visualization of the flowmap
+        // if (m_showFlowVectors)
+        // {
+        //     VisualizeFlowmap();
+        // }
     }
 
     private void VisualizeFlowmap()

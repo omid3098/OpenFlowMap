@@ -8,8 +8,7 @@ public class OpenFlowmap : MonoBehaviour
     public Resolution m_textureResolution = Resolution._128x128;
     public LayerMask LayerMask;
 
-    [SerializeField] Vector2 m_flowDirection = Vector2.zero;
-    [SerializeField] int m_rayCount = 5;
+    [SerializeField] int m_rayCount = 100;
 
     private MeshRenderer m_meshRenderer;
     private MeshFilter m_meshFilter;
@@ -36,7 +35,7 @@ public class OpenFlowmap : MonoBehaviour
         }
         foreach (var effector in m_effectors)
         {
-            effector.Execute(m_rayProjector);
+            effector.Execute();
         }
     }
 
@@ -44,6 +43,8 @@ public class OpenFlowmap : MonoBehaviour
     {
         m_rayProjector.Draw();
     }
+
+    internal RayProjector RayProjector => m_rayProjector;
 
     private void Dispose()
     {
