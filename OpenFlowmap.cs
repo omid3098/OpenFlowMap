@@ -1,12 +1,10 @@
-using System;
-using System.Collections.Generic;
 using UnityEngine;
 [ExecuteInEditMode]
 public class OpenFlowmap : MonoBehaviour
 {
-    public enum Resolution { _32x32 = 32, _64x64 = 64, _128x128 = 128, _256x256 = 256, _512x512 = 512, _1024x1024 = 1024 }
-    public Resolution m_textureResolution = Resolution._128x128;
     public LayerMask LayerMask;
+    internal RayProjector RayProjector => m_rayProjector;
+    internal int RayResolution => m_rayCount;
 
     [SerializeField] int m_rayCount = 100;
 
@@ -44,7 +42,6 @@ public class OpenFlowmap : MonoBehaviour
         m_rayProjector.Draw();
     }
 
-    internal RayProjector RayProjector => m_rayProjector;
 
     private void Dispose()
     {

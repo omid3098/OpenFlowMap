@@ -6,9 +6,9 @@ public class OpenFlowmapEditor : Editor
 {
     private OpenFlowmap openFlowmap;
 
-    static bool m_showFlowVectors = false;
-    static bool m_debug = false;
-    static float m_vectorLength = 0.2f;
+    // static bool m_showFlowVectors = false;
+    // static bool m_debug = false;
+    // static float m_vectorLength = 0.2f;
 
     public override void OnInspectorGUI()
     {

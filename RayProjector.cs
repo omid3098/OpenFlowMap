@@ -23,13 +23,17 @@ public class RayProjector
         {
             for (int y = 0; y < m_rayCount; y++)
             {
-                var position = new Vector3(
-                    (x + 0.5f) / m_rayCount * m_size.x - m_size.x / 2f,
-                    0,
-                    (y + 0.5f) / m_rayCount * m_size.y - m_size.y / 2f
+                var pixelPosition = new Vector2(
+                    (x + 0.5f) / m_rayCount * m_size.x,
+                    (y + 0.5f) / m_rayCount * m_size.y
                 );
+                var worldPosition = m_transform.TransformPoint(new Vector3(
+                    pixelPosition.x - m_size.x / 2f,
+                    0,
+                    pixelPosition.y - m_size.y / 2f
+                ));
                 var direction = m_transform.up;
-                m_rays[x * m_rayCount + y] = new Ray(position, direction);
+                m_rays[x * m_rayCount + y] = new Ray(worldPosition, direction);
             }
         }
     }

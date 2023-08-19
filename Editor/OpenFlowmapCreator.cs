@@ -27,7 +27,6 @@ public class OpenFlowmapCreator
 
         // Add the OpenFlowmap component to the GameObject
         var _flowmap = flowmapObject.AddComponent<OpenFlowmap>();
-        _flowmap.m_textureResolution = OpenFlowmap.Resolution._128x128;
         _flowmap.LayerMask = LayerMask.GetMask("Water");
         _flowmap.Initialize();
 
