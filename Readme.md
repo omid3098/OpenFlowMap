@@ -22,6 +22,7 @@ TODO: Add UPM installation instructions
 
 - We need an OpenFlowmap configuration. Create a new one in your project (Right click in the project window -> Create -> OpenFlowmap -> OpenFlowmapConfig) and assign it to the OpenFlowmap object.
   You can set the layer mask, number of rays, ray processors to use, etc.
+  
   <img width="223" alt="image" src="https://github.com/omid3098/OpenFlowMap/assets/6388730/8f441560-6dba-43e3-ad29-a9110c455b31">
 
 - Now you need some processors to affect the flowmap. So far I have implemented these processors:
