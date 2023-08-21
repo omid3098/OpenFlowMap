@@ -2,10 +2,10 @@ using UnityEngine;
 
 public abstract class Effector : ScriptableObject
 {
-    protected OpenFlowmap openFlowmap;
-    public void Register(OpenFlowmap openFlowmap)
+    protected OpenFlowmapConfig openFlowmapConfig;
+    public void Register(OpenFlowmapConfig openFlowmap)
     {
-        this.openFlowmap = openFlowmap;
+        this.openFlowmapConfig = openFlowmap;
     }
 
     public virtual void Initialize() { }
@@ -13,9 +13,9 @@ public abstract class Effector : ScriptableObject
 
     private void OnValidate()
     {
-        if (openFlowmap != null)
+        if (openFlowmapConfig != null)
         {
-            openFlowmap.Initialize();
+            openFlowmapConfig.Initialize();
         }
     }
 }

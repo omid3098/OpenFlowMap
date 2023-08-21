@@ -1,7 +1,7 @@
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "OpenFlowmap", menuName = "OpenFlowmap/OpenFlowmap", order = 1)]
-public class OpenFlowmap : ScriptableObject
+[CreateAssetMenu(fileName = "OpenFlowmapConfig", menuName = "OpenFlowmap/OpenFlowmapConfig", order = 1)]
+public class OpenFlowmapConfig : ScriptableObject
 {
     public LayerMask LayerMask;
     internal RayProjector RayProjector => m_rayProjector;

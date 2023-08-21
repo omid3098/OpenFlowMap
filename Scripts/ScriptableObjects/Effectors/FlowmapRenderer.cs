@@ -1,8 +1,8 @@
 using System;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "GetTexture", menuName = "OpenFlowmap/GetTexture")]
-public class GetTexture : Effector
+[CreateAssetMenu(fileName = "FlowmapRenderer", menuName = "OpenFlowmap/Effector/FlowmapRenderer")]
+public class FlowmapRenderer : Effector
 {
     public enum Resolution { _32x32 = 32, _64x64 = 64, _128x128 = 128, _256x256 = 256, _512x512 = 512, _1024x1024 = 1024 }
     public Resolution m_textureResolution = Resolution._128x128;
@@ -10,11 +10,11 @@ public class GetTexture : Effector
     internal override void Execute()
     {
         // Debug.Log("BakeTexture" + m_textureResolution);
-        var rays = openFlowmap.RayProjector.GetRays();
+        var rays = openFlowmapConfig.RayProjector.GetRays();
         var textureSize = (int)m_textureResolution;
         Texture2D texture = new Texture2D(textureSize, textureSize, TextureFormat.RGBAFloat, false, false);
         var colors = new Color[textureSize * textureSize];
-        var projectorResolution = openFlowmap.RayResolution;
+        var projectorResolution = openFlowmapConfig.RayResolution;
         // remap projector resolution to texture resolution
         var remap = (float)projectorResolution / textureSize;
         for (int u = 0; u < textureSize; u++)

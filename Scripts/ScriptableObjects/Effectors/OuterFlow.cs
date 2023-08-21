@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "OuterFlow", menuName = "OpenFlowmap/OuterFlow")]
+[CreateAssetMenu(fileName = "OuterFlow", menuName = "OpenFlowmap/Effector/OuterFlow")]
 public class OuterFlow : Effector
 {
     [Range(0.1f, 2)] public float m_radius = 0.5f;
@@ -15,13 +15,13 @@ public class OuterFlow : Effector
 
     internal override void Execute()
     {
-        Ray[] mainRaysArray = openFlowmap.RayProjector.GetRays();
+        Ray[] mainRaysArray = openFlowmapConfig.RayProjector.GetRays();
         for (int i = 0; i < mainRaysArray.Length; i++)
         {
             Ray projectorRay = mainRaysArray[i];
             var position = projectorRay.origin;
             // use SphereOverlap to get all colliders in a radius
-            int nearbyColliders = Physics.OverlapSphereNonAlloc(position, m_radius, m_colliders, openFlowmap.LayerMask);
+            int nearbyColliders = Physics.OverlapSphereNonAlloc(position, m_radius, m_colliders, openFlowmapConfig.LayerMask);
 
             if (nearbyColliders > 0)
             {
@@ -39,7 +39,7 @@ public class OuterFlow : Effector
                 {
                     // Cast ray in direction
                     var ray = new Ray(position, direction);
-                    if (Physics.Raycast(ray, out var hit, m_radius, openFlowmap.LayerMask))
+                    if (Physics.Raycast(ray, out var hit, m_radius, openFlowmapConfig.LayerMask))
                     {
                         var distance = Vector3.Distance(position, hit.point);
                         // if the distance is too short, this point should effect more than the others

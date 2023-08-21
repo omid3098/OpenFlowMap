@@ -3,7 +3,7 @@ using UnityEngine;
 [ExecuteInEditMode]
 public class OpenFlowmapBehaviour : MonoBehaviour
 {
-    [SerializeField] OpenFlowmap m_openFlowmap;
+    [SerializeField] OpenFlowmapConfig m_openFlowmapConfig;
     [SerializeField] bool m_drawGizmos = true;
 
     private MeshRenderer m_meshRenderer;
@@ -17,10 +17,10 @@ public class OpenFlowmapBehaviour : MonoBehaviour
 
     public void Initialize()
     {
-        if (m_openFlowmap != null)
+        if (m_openFlowmapConfig != null)
         {
-            m_openFlowmap.SetData(m_meshFilter.sharedMesh.bounds.size, new Plane(transform.up, transform.position), transform.position);
-            m_openFlowmap.Initialize();
+            m_openFlowmapConfig.SetData(m_meshFilter.sharedMesh.bounds.size, new Plane(transform.up, transform.position), transform.position);
+            m_openFlowmapConfig.Initialize();
         }
     }
 
@@ -31,8 +31,8 @@ public class OpenFlowmapBehaviour : MonoBehaviour
 
     private void Update()
     {
-        if (m_openFlowmap != null && m_drawGizmos)
-            m_openFlowmap.Update();
+        if (m_openFlowmapConfig != null && m_drawGizmos)
+            m_openFlowmapConfig.Update();
 
         if (transform.hasChanged)
         {

@@ -1,17 +1,17 @@
 using UnityEngine;
-[CreateAssetMenu(fileName = "GaussianBlurEffect", menuName = "OpenFlowmap/GaussianBlurEffect")]
-public class GaussianBlurEffect : Effector
+[CreateAssetMenu(fileName = "BlurEffect", menuName = "OpenFlowmap/Effector/BlurEffect")]
+public class BlurEffect : Effector
 {
     [SerializeField, Range(0, 5)] int m_blurSize = 1;
     internal override void Execute()
     {
-        var rays = openFlowmap.RayProjector.GetRays();
+        var rays = openFlowmapConfig.RayProjector.GetRays();
         BlurRays(rays, m_blurSize);
     }
 
     void BlurRays(Ray[] rays, int size)
     {
-        var width = openFlowmap.RayCount;
+        var width = openFlowmapConfig.RayCount;
 
         for (int x = 0; x < width; x++)
         {
