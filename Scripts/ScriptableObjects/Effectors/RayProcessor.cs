@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public abstract class Effector : ScriptableObject
+public abstract class RayProcessor : ScriptableObject
 {
     protected OpenFlowmapConfig openFlowmapConfig;
     public void Register(OpenFlowmapConfig openFlowmap)

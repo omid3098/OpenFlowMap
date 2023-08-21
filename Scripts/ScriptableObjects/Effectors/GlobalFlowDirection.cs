@@ -1,6 +1,6 @@
 using UnityEngine;
 [CreateAssetMenu(fileName = "GlobalFlowDirection", menuName = "OpenFlowmap/Effector/GlobalFlowDirection")]
-public class GlobalFlowDirection : Effector
+public class GlobalFlowDirection : RayProcessor
 {
     [SerializeField] Vector2 m_flowDirection = new Vector2(1, 0);
     [SerializeField, Range(0f, 1f)] float m_flowStrenght = 0.5f;

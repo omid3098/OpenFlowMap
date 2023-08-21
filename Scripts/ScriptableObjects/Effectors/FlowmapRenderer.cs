@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "FlowmapRenderer", menuName = "OpenFlowmap/Effector/FlowmapRenderer")]
-public class FlowmapRenderer : Effector
+public class FlowmapRenderer : RayProcessor
 {
     public enum Resolution { _32x32 = 32, _64x64 = 64, _128x128 = 128, _256x256 = 256, _512x512 = 512, _1024x1024 = 1024 }
     public Resolution m_textureResolution = Resolution._128x128;
@@ -48,7 +48,9 @@ public class FlowmapRenderer : Effector
         UnityEditor.AssetDatabase.Refresh();
 
         var textureImporter = UnityEditor.AssetImporter.GetAtPath(path) as UnityEditor.TextureImporter;
-        textureImporter.textureType = UnityEditor.TextureImporterType.NormalMap;
+        textureImporter.textureType = UnityEditor.TextureImporterType.Default;
+        textureImporter.textureCompression = UnityEditor.TextureImporterCompression.Uncompressed;
+        textureImporter.crunchedCompression = false;
         textureImporter.SaveAndReimport();
 
         m_texture = UnityEditor.AssetDatabase.LoadAssetAtPath<Texture2D>(path);

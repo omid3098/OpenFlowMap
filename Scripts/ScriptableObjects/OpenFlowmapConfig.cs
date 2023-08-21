@@ -11,7 +11,7 @@ public class OpenFlowmapConfig : ScriptableObject
     [SerializeField] int m_rayCount = 100;
     [SerializeField, Range(0f, 1f)] float m_rayLenght = 0.5f;
     private RayProjector m_rayProjector;
-    [SerializeField] Effector[] m_effectors;
+    [SerializeField] RayProcessor[] m_effectors;
     private Vector3 m_size;
     private Plane m_plane;
     private Vector3 m_planeOrigin;
@@ -35,7 +35,7 @@ public class OpenFlowmapConfig : ScriptableObject
             m_rayLenght);
         for (int i = 0; i < m_effectors.Length; i++)
         {
-            Effector effector = m_effectors[i];
+            RayProcessor effector = m_effectors[i];
             if (effector != null)
             {
                 effector.Register(this);

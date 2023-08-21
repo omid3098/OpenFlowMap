@@ -48,7 +48,7 @@ public class RayProjector
         {
             var ray = m_rays[i];
             var color = Utils.ConvertDirectionToColor(new Vector2(ray.direction.x, ray.direction.z));
-            Debug.DrawRay(ray.origin, new Vector3(ray.direction.x, 0, ray.direction.z) * m_rayLenght, color);
+            Debug.DrawRay(ray.origin, new Vector3(ray.direction.x, ray.direction.y * 0.2f, ray.direction.z) * m_rayLenght, color);
         }
     }
 
