@@ -42,8 +42,16 @@ TODO: Add UPM installation instructions
 
   <img width="262" alt="image" src="https://github.com/omid3098/OpenFlowMap/assets/6388730/2f7a690e-df2a-4584-858a-62ef23da1e8b">
 
-
-
 - You can Render the flowmap to a texture by adding a FlowmapRenderer processor to the OpenFlowmap configuration. it will create a texture at the same directory as your scene file. (feel free to change it)
 
 There are few sample shaders and materials in Sample -> Shaders directory. you can use them to visualize the flowmap. just drag and drop desired material to the flowmap plane.
+
+
+
+
+
+
+## Example usage using sample processors:
+
+https://github.com/omid3098/OpenFlowMap/assets/6388730/b84016ae-eb9d-4331-acdd-f3b3f8d9a665
+
