@@ -1,6 +1,7 @@
 # OpenFlowmap
 
-<img width="791" alt="image" src="https://github.com/omid3098/OpenFlowMap/assets/6388730/0f6024ef-055c-4a36-aa34-98d81eb61822">
+<img width="771" alt="image" src="https://github.com/omid3098/OpenFlowMap/assets/6388730/a94c2169-190a-4bd3-9f02-5c2f9037eaa1">
+
 
 Generate flowmap dynamically from your scene.
 
@@ -20,12 +21,14 @@ TODO: Add UPM installation instructions
 
 - Create a new Flowmap_Plane in your scene. (Right click in the hierarchy -> OpenFlowmap)
 
-  <img width="226" alt="image" src="https://github.com/omid3098/OpenFlowMap/assets/6388730/b8ff21a2-131b-4d62-b568-6d2129fef768">
+  <img width="269" alt="image" src="https://github.com/omid3098/OpenFlowMap/assets/6388730/3e2ef15a-f0ce-4e36-b625-2c07bef80903">
+
 
 - We need an OpenFlowmap configuration. Create a new one in your project (Right click in the project window -> Create -> OpenFlowmap -> OpenFlowmapConfig) and assign it to the OpenFlowmap object.
   You can set the layer mask, number of rays, ray processors to use, etc.
 
-  <img width="223" alt="image" src="https://github.com/omid3098/OpenFlowMap/assets/6388730/8f441560-6dba-43e3-ad29-a9110c455b31">
+  <img width="268" alt="image" src="https://github.com/omid3098/OpenFlowMap/assets/6388730/75bfa26f-5fb3-4492-a554-2ee37ccb769c">
+
 
 - Now you need some processors to affect the flowmap. So far I have implemented these processors:
 
@@ -37,7 +40,8 @@ TODO: Add UPM installation instructions
 - Add the processors you want to use to the OpenFlowmap object. Please note that the processors will be executed in the order they are in the list. so if you want to blur the flowmap, you need to add the blur processor after something like outer flow. or putting the flowmap renderer at the end of the list.
 - Or use available ones in Sample->Data->Processors directory (drag them into the processors field of the configuration file)
 
-  <img width="223" alt="image" src="https://github.com/omid3098/OpenFlowMap/assets/6388730/c30fce41-3d79-4ac8-a198-daff98eeb23a">
+  <img width="262" alt="image" src="https://github.com/omid3098/OpenFlowMap/assets/6388730/2f7a690e-df2a-4584-858a-62ef23da1e8b">
+
 
 
 - You can Render the flowmap to a texture by adding a FlowmapRenderer processor to the OpenFlowmap configuration. it will create a texture at the same directory as your scene file. (feel free to change it)
