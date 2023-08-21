@@ -814,7 +814,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_openFlowmap: {fileID: 11400000, guid: 42af1edf62d8a074a96d1e611bfde3b0, type: 2}
-  m_drawGizmos: 0
+  m_drawGizmos: 1
 --- !u!65 &1292587383
 BoxCollider:
   m_ObjectHideFlags: 0

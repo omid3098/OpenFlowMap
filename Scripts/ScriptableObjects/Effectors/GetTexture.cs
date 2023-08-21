@@ -44,6 +44,8 @@ public class GetTexture : Effector
         var path = System.IO.Path.GetDirectoryName(scenePath) + "/" + fileName + "_" + m_textureResolution + ".png";
         var bytes = texture.EncodeToPNG();
         System.IO.File.WriteAllBytes(path, bytes);
+        // Refresh the AssetDatabase after saving the file
+        UnityEditor.AssetDatabase.Refresh();
 
         var textureImporter = UnityEditor.AssetImporter.GetAtPath(path) as UnityEditor.TextureImporter;
         textureImporter.textureType = UnityEditor.TextureImporterType.NormalMap;

@@ -16,7 +16,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 16
   m_rayCount: 120
-  m_rayLenght: 0.268
+  m_rayLenght: 0.597
   m_effectors:
   - {fileID: 11400000, guid: 8b6859e7d793fbb4ea0427e14c5e1c20, type: 2}
   - {fileID: 11400000, guid: 2f7986c436f7bce4887375ec31fd3dff, type: 2}
