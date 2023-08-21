@@ -35,9 +35,10 @@ TODO: Add UPM installation instructions
   - FlowmapRenderer: This processor will render the flowmap to a texture.
 
 - Add the processors you want to use to the OpenFlowmap object. Please note that the processors will be executed in the order they are in the list. so if you want to blur the flowmap, you need to add the blur processor after something like outer flow. or putting the flowmap renderer at the end of the list.
-- Or use available ones in Data->Processors directory (drag them into the processors field of the configuration file)
+- Or use available ones in Sample->Data->Processors directory (drag them into the processors field of the configuration file)
 
-  <img width="205" alt="image" src="https://github.com/omid3098/OpenFlowMap/assets/6388730/6321e75f-299e-4d13-a868-dd03a54de50b">
+  <img width="223" alt="image" src="https://github.com/omid3098/OpenFlowMap/assets/6388730/c30fce41-3d79-4ac8-a198-daff98eeb23a">
+
 
 - You can Render the flowmap to a texture by adding a FlowmapRenderer processor to the OpenFlowmap configuration. it will create a texture at the same directory as your scene file. (feel free to change it)
 
