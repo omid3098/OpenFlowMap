@@ -10,8 +10,6 @@ public class OpenFlowmapBehaviour : MonoBehaviour
     private MeshFilter m_meshFilter;
     private void Awake()
     {
-        m_meshFilter = GetComponent<MeshFilter>();
-        m_meshRenderer = GetComponent<MeshRenderer>();
         Initialize();
     }
 
@@ -19,6 +17,8 @@ public class OpenFlowmapBehaviour : MonoBehaviour
     {
         if (m_openFlowmapConfig != null)
         {
+            m_meshFilter = GetComponent<MeshFilter>();
+            m_meshRenderer = GetComponent<MeshRenderer>();
             m_openFlowmapConfig.SetData(m_meshFilter.sharedMesh.bounds.size, new Plane(transform.up, transform.position), transform.position);
             m_openFlowmapConfig.Initialize();
         }
@@ -32,7 +32,7 @@ public class OpenFlowmapBehaviour : MonoBehaviour
     private void Update()
     {
         if (m_openFlowmapConfig != null && m_drawGizmos)
-            m_openFlowmapConfig.Update();
+            m_openFlowmapConfig.Draw();
 
         if (transform.hasChanged)
         {

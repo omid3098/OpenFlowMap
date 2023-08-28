@@ -8,6 +8,10 @@ public class OpenFlowmapConfig : ScriptableObject
     internal int RayResolution => m_rayCount;
     public int RayCount => m_rayCount;
 
+    public Vector3 Size { get => m_size; }
+    public Vector3 PlaneOrigin { get => m_planeOrigin; }
+    public Plane Plane { get => m_plane; }
+
     [SerializeField] int m_rayCount = 100;
     [SerializeField, Range(0f, 1f)] float m_rayLenght = 0.5f;
     private RayProjector m_rayProjector;
@@ -45,11 +49,14 @@ public class OpenFlowmapConfig : ScriptableObject
         }
     }
 
-    public void Update()
+    public void Draw()
     {
         m_rayProjector.Draw();
+        foreach (var processor in m_processors)
+        {
+            processor.Draw();
+        }
     }
-
 
     private void Dispose()
     {

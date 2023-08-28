@@ -1,5 +1,5 @@
 using UnityEngine;
-[CreateAssetMenu(fileName = "GlobalFlowDirection", menuName = "OpenFlowmap/Effector/GlobalFlowDirection")]
+[CreateAssetMenu(fileName = "GlobalFlowDirection", menuName = "OpenFlowmap/Processor/GlobalFlowDirection")]
 public class GlobalFlowDirection : RayProcessor
 {
     [SerializeField] Vector2 m_flowDirection = new Vector2(1, 0);

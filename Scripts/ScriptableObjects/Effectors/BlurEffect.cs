@@ -1,5 +1,5 @@
 using UnityEngine;
-[CreateAssetMenu(fileName = "BlurEffect", menuName = "OpenFlowmap/Effector/BlurEffect")]
+[CreateAssetMenu(fileName = "BlurEffect", menuName = "OpenFlowmap/Processor/BlurEffect")]
 public class BlurEffect : RayProcessor
 {
     [SerializeField, Range(0, 5)] int m_blurSize = 1;

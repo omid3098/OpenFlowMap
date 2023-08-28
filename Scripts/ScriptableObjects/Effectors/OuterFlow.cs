@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "OuterFlow", menuName = "OpenFlowmap/Effector/OuterFlow")]
+[CreateAssetMenu(fileName = "OuterFlow", menuName = "OpenFlowmap/Processor/OuterFlow")]
 public class OuterFlow : RayProcessor
 {
     [Range(0.1f, 2)] public float m_radius = 0.5f;

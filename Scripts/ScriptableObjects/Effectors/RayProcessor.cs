@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public abstract class RayProcessor : ScriptableObject
@@ -18,4 +19,6 @@ public abstract class RayProcessor : ScriptableObject
             openFlowmapConfig.Initialize();
         }
     }
+
+    internal virtual void Draw() { }
 }
