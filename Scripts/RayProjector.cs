@@ -53,4 +53,47 @@ public class RayProjector
     }
 
     internal Ray[] GetRays() => m_rays;
+
+    internal Ray GetRay(int index) => m_rays[index];
+    internal Ray GetRay(int x, int y) => m_rays[GetIndex(x, y)];
+
+
+    internal int GetNeighborIndex(int x, int y, int neighborIndex)
+    {
+        // 0 1 2
+        // 3 x 4
+        // 5 6 7
+        // if x , y are out of bounds, return -1
+        if (x < 0 || x >= m_rayCount || y < 0 || y >= m_rayCount)
+            return -1;
+
+        switch (neighborIndex)
+        {
+            case 0:
+                return GetIndex(x - 1, y - 1);
+            case 1:
+                return GetIndex(x, y - 1);
+            case 2:
+                return GetIndex(x + 1, y - 1);
+            case 3:
+                return GetIndex(x - 1, y);
+            case 4:
+                return GetIndex(x + 1, y);
+            case 5:
+                return GetIndex(x - 1, y + 1);
+            case 6:
+                return GetIndex(x, y + 1);
+            case 7:
+                return GetIndex(x + 1, y + 1);
+            default:
+                return -1;
+        }
+    }
+
+    internal int GetIndex(int x, int y)
+    {
+        if (x < 0 || x >= m_rayCount || y < 0 || y >= m_rayCount)
+            return -1;
+        return x + y * m_rayCount;
+    }
 }

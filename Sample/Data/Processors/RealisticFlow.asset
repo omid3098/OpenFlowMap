@@ -9,13 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a04ee27f0708341c19f4e6be9979357d, type: 3}
-  m_Name: OpenFlowmapConfig
+  m_Script: {fileID: 11500000, guid: 192aea116d6efa7438eeba8c6d73ff73, type: 3}
+  m_Name: RealisticFlow
   m_EditorClassIdentifier: 
-  LayerMask:
-    serializedVersion: 2
-    m_Bits: 16
-  m_rayCount: 128
-  m_rayLenght: 0.188
-  m_processors:
-  - {fileID: 11400000, guid: 08f8b7408a914e048bd30a756b5e7594, type: 2}
+  m_directions: {x: 1, y: 0}
+  m_strenght: 0.489
+  m_radius: 0.733
+  m_iterationCount: 1
