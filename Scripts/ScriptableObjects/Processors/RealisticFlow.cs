@@ -25,9 +25,15 @@ public class RealisticFlow : RayProcessor
         }
         fluidSolver.setFadeSpeed(0.003f).setDeltaT(0.5f).setVisc(0.0001f).setSolverIterations(m_iterationCount);
 
-        // use EditorCoroutineUtility.StartCoroutine to start a coroutine in the editor to repaint the scene view
-        EditorCoroutineUtility.StartCoroutineOwnerless(UpdateFluidSolverCoroutine());
-
+        if (dynamicSim)
+        {
+            // use EditorCoroutineUtility.StartCoroutine to start a coroutine in the editor to repaint the scene view
+            EditorCoroutineUtility.StartCoroutineOwnerless(UpdateFluidSolverCoroutine());
+        }
+        else
+        {
+            UpdateRayDirections();
+        }
     }
 
     IEnumerator UpdateFluidSolverCoroutine()
@@ -61,9 +67,9 @@ public class RealisticFlow : RayProcessor
         // add force from all points in the first row
         for (int x = 0; x < resolution; x++)
         {
-            if (x % 2 == 0)
+            // if (x % 2 == 0)
             {
-                AddForce(x, 0);
+                AddForce(x, -10);
             }
         }
     }
@@ -139,8 +145,8 @@ public class RealisticFlow : RayProcessor
         else if (y > resolution) y = resolution;
         var index = fluidSolver.getIndexForCellPosition(x, y);
 
-        float u = NormalizedDirection.x * m_strenght;
-        float v = NormalizedDirection.z * m_strenght;
+        float u = NormalizedDirection.z * m_strenght;
+        float v = NormalizedDirection.x * m_strenght;
         fluidSolver.uOld[index] += u;
         fluidSolver.vOld[index] += v;
     }
