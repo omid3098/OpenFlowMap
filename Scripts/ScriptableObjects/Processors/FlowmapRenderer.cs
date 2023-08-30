@@ -1,4 +1,5 @@
 using System;
+using UnityEditor;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "FlowmapRenderer", menuName = "OpenFlowmap/Processor/FlowmapRenderer")]
@@ -34,6 +35,7 @@ public class FlowmapRenderer : RayProcessor
         texture.Apply();
         SaveTexture(texture);
         ApplyTexture();
+        Debug.Log("BakeTexture" + m_textureResolution);
     }
 
     private void SaveTexture(Texture2D texture)
@@ -54,6 +56,8 @@ public class FlowmapRenderer : RayProcessor
         textureImporter.SaveAndReimport();
 
         m_texture = UnityEditor.AssetDatabase.LoadAssetAtPath<Texture2D>(path);
+
+        AssetDatabase.Refresh();
     }
 
     private void ApplyTexture()

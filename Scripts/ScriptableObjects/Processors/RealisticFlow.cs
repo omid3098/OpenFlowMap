@@ -1,5 +1,4 @@
 using System;
-using Unity.Collections;
 using UnityEngine;
 using Unity.EditorCoroutines.Editor;
 using System.Collections;
@@ -11,30 +10,30 @@ public class RealisticFlow : RayProcessor
     [SerializeField, Range(0.001f, 100f)] float m_strenght = 1;
     [SerializeField, Range(0.1f, 1f)] float m_radius = 1;
     [SerializeField, Range(1, 128)] int m_iterationCount = 10;
-
-    [SerializeField, Range(1, 128)] int m_posX = 1;
-    [SerializeField, Range(-1, 128)] int m_posY = 1;
-    [SerializeField] bool run = true;
-    static bool isRunning = false;
+    [SerializeField] bool dynamicSim = true;
+    [SerializeField] bool isRunning = false;
+    static MSAFluidSolver2D fluidSolver;
     private int resolution;
-    private MSAFluidSolver2D fluidSolver;
 
     Vector3 NormalizedDirection => new Vector3(m_directions.x, 0, m_directions.y).normalized;
     internal override void Execute()
     {
-        isRunning = false;
         resolution = openFlowmapConfig.RayResolution;
-        fluidSolver = new MSAFluidSolver2D(openFlowmapConfig.RayResolution, openFlowmapConfig.RayResolution);
+        if (fluidSolver == null || fluidSolver.getWidth() - 2 != resolution)
+        {
+            fluidSolver = new MSAFluidSolver2D(openFlowmapConfig.RayResolution, openFlowmapConfig.RayResolution);
+        }
         fluidSolver.setFadeSpeed(0.003f).setDeltaT(0.5f).setVisc(0.0001f).setSolverIterations(m_iterationCount);
 
         // use EditorCoroutineUtility.StartCoroutine to start a coroutine in the editor to repaint the scene view
         EditorCoroutineUtility.StartCoroutineOwnerless(UpdateFluidSolverCoroutine());
+
     }
 
     IEnumerator UpdateFluidSolverCoroutine()
     {
         if (isRunning) yield break;
-        while (true && run)
+        while (true && dynamicSim)
         {
             Solve();
             isRunning = true;
@@ -50,16 +49,40 @@ public class RealisticFlow : RayProcessor
 
     private void Solve()
     {
+        // SetCurrentDirections();
         Collide();
+        AddInitialForce();
+        fluidSolver.update();
+        UpdateRayDirections();
+    }
+
+    private void AddInitialForce()
+    {
         // add force from all points in the first row
         for (int x = 0; x < resolution; x++)
         {
-            if (x % 2 == 0) continue;
-            AddForce(x, m_posY);
+            if (x % 2 == 0)
+            {
+                AddForce(x, 0);
+            }
         }
-        // AddForce(m_posX, m_posY);
-        fluidSolver.update();
-        UpdateRayDirections();
+    }
+
+    private void SetCurrentDirections()
+    {
+        var rays = openFlowmapConfig.RayProjector.GetRays();
+        // loop through all the rays in x and y direction
+        for (int x = 0; x < resolution; x++)
+        {
+            for (int y = 0; y < resolution; y++)
+            {
+                int indexRays = openFlowmapConfig.RayProjector.GetIndex(x, y);
+                Ray ray = rays[indexRays];
+                int indexSolver = fluidSolver.getIndexForCellPosition(x, y);
+                fluidSolver.u[indexSolver] = ray.direction.x;
+                fluidSolver.v[indexSolver] = ray.direction.z;
+            }
+        }
     }
 
     private void UpdateRayDirections()
@@ -75,7 +98,7 @@ public class RealisticFlow : RayProcessor
                 float v = fluidSolver.v[indexSolver];
                 int indexRays = openFlowmapConfig.RayProjector.GetIndex(x, y);
                 Ray ray = rays[indexRays];
-                Vector3 newDirection = new Vector3(u, ray.direction.y, v);
+                Vector3 newDirection = new Vector3(u, ray.direction.y, v).normalized;
                 rays[indexRays] = new Ray(ray.origin, newDirection);
             }
         }

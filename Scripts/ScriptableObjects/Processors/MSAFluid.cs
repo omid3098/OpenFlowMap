@@ -731,7 +731,7 @@ public class MSAFluidSolver2D
 
     protected void setBoundary(int b, float[] x)
     {
-        //return;
+        return;
         for (int i = 1; i <= _NX; i++)
         {
             if (i <= _NY)
@@ -753,6 +753,7 @@ public class MSAFluidSolver2D
 
     protected void setBoundaryRGB(int bound)
     {
+        return;
         int index1, index2;
         for (int i = 1; i <= _NX; i++)
         {
