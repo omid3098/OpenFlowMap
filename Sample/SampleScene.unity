@@ -1113,14 +1113,14 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2106551161}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4a40419c830987b43adbb5f8ad781aed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_openFlowmapConfig: {fileID: 11400000, guid: 400036ec589714029adcad7ef27ed6d9,
     type: 2}
-  m_drawGizmos: 1
+  m_drawGizmos: 0
 --- !u!65 &2106551163
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1170,7 +1170,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 9d7d717312cdaf0489ba74c65a51cb00, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
