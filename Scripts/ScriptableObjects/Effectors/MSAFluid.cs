@@ -64,8 +64,6 @@ public class MSAFluidSolver2D
     public float[] uOld;
     public float[] vOld;
 
-    public static float FLUID_DEFAULT_NX = 100; // number of cells in x direction
-    public static float FLUID_DEFAULT_NY = 100; // number of cells in y direction
     public static float FLUID_DEFAULT_DT = 1.0f; // timestep
     public static float FLUID_DEFAULT_VISC = 0.0001f; // viscosity
     public static float FLUID_DEFAULT_FADESPEED = 0; // how fast the fluid dye dissipates and fades out

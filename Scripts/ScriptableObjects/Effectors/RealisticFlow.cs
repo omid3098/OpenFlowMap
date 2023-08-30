@@ -1,29 +1,64 @@
 using System;
 using Unity.Collections;
 using UnityEngine;
+using Unity.EditorCoroutines.Editor;
+using System.Collections;
 
 [CreateAssetMenu(fileName = "RealisticFlow", menuName = "OpenFlowmap/Processor/RealisticFlow")]
 public class RealisticFlow : RayProcessor
 {
     [SerializeField] Vector2 m_directions = new Vector2(1, 0);
-    [SerializeField, Range(0.001f, 1f)] float m_strenght = 1;
+    [SerializeField, Range(0.001f, 100f)] float m_strenght = 1;
     [SerializeField, Range(0.1f, 1f)] float m_radius = 1;
-    [SerializeField] int m_iterationCount = 10;
+    [SerializeField, Range(1, 128)] int m_iterationCount = 10;
+
+    [SerializeField, Range(1, 128)] int m_posX = 1;
+    [SerializeField, Range(-1, 128)] int m_posY = 1;
+    [SerializeField] bool run = true;
+    static bool isRunning = false;
     private int resolution;
     private MSAFluidSolver2D fluidSolver;
 
     Vector3 NormalizedDirection => new Vector3(m_directions.x, 0, m_directions.y).normalized;
     internal override void Execute()
     {
+        isRunning = false;
         resolution = openFlowmapConfig.RayResolution;
         fluidSolver = new MSAFluidSolver2D(openFlowmapConfig.RayResolution, openFlowmapConfig.RayResolution);
-        fluidSolver.enableRGB(true).setFadeSpeed(0.003f).setDeltaT(0.5f).setVisc(0.0001f);
+        fluidSolver.setFadeSpeed(0.003f).setDeltaT(0.5f).setVisc(0.0001f).setSolverIterations(m_iterationCount);
 
-        // add test force to the solver
-        AddForce(resolution / 2, resolution / 2);
+        // use EditorCoroutineUtility.StartCoroutine to start a coroutine in the editor to repaint the scene view
+        EditorCoroutineUtility.StartCoroutineOwnerless(UpdateFluidSolverCoroutine());
+    }
 
-        UpdateFluidSolver();
+    IEnumerator UpdateFluidSolverCoroutine()
+    {
+        if (isRunning) yield break;
+        while (true && run)
+        {
+            Solve();
+            isRunning = true;
 
+#if UNITY_EDITOR
+            // Repaint scene view
+            UnityEditor.EditorUtility.SetDirty(this);
+            UnityEditor.SceneView.RepaintAll();
+#endif
+            yield return null;
+        }
+    }
+
+    private void Solve()
+    {
+        Collide();
+        // add force from all points in the first row
+        for (int x = 0; x < resolution; x++)
+        {
+            if (x % 2 == 0) continue;
+            AddForce(x, m_posY);
+        }
+        // AddForce(m_posX, m_posY);
+        fluidSolver.update();
         UpdateRayDirections();
     }
 
@@ -35,38 +70,55 @@ public class RealisticFlow : RayProcessor
         {
             for (int y = 0; y < resolution; y++)
             {
-                int indexInSolver = fluidSolver.getIndexForNormalizedPosition(x, y);
-                float u = fluidSolver.u[indexInSolver];
-                float v = fluidSolver.v[indexInSolver];
-                Vector2 direction = new Vector2(u, v);
-                int indexInRays = openFlowmapConfig.RayProjector.GetIndex(x, y);
-                Ray ray = rays[indexInRays];
-                rays[indexInRays] = new Ray(ray.origin, new Vector3(direction.x, ray.direction.y, direction.y));
+                int indexSolver = fluidSolver.getIndexForCellPosition(x, y);
+                float u = fluidSolver.u[indexSolver];
+                float v = fluidSolver.v[indexSolver];
+                int indexRays = openFlowmapConfig.RayProjector.GetIndex(x, y);
+                Ray ray = rays[indexRays];
+                Vector3 newDirection = new Vector3(u, ray.direction.y, v);
+                rays[indexRays] = new Ray(ray.origin, newDirection);
             }
         }
     }
 
+    private void Collide()
+    {
+        var rays = openFlowmapConfig.RayProjector.GetRays();
+        // loop through all the rays in x and y direction
+        for (int x = 0; x < resolution; x++)
+        {
+            for (int y = 0; y < resolution; y++)
+            {
+                int indexInRays = openFlowmapConfig.RayProjector.GetIndex(x, y);
+                var ray = rays[indexInRays];
+                if (Physics.CheckSphere(ray.origin, m_radius, openFlowmapConfig.LayerMask))
+                {
+                    AddBarrier(x, y);
+                }
+            }
+        }
+    }
+
+    private void AddBarrier(int x, int y)
+    {
+        var indexInSolver = fluidSolver.getIndexForCellPosition(x, y);
+        fluidSolver.u[indexInSolver] = 0;
+        fluidSolver.v[indexInSolver] = 0;
+        fluidSolver.uOld[indexInSolver] = 0;
+        fluidSolver.vOld[indexInSolver] = 0;
+    }
+
     private void AddForce(int x, int y)
     {
-        var index = fluidSolver.getIndexForNormalizedPosition(x, y);
         if (x < 0) x = 0;
         else if (x > resolution) x = resolution;
         if (y < 0) y = 0;
         else if (y > resolution) y = resolution;
-        // var color = Utils.ConvertDirectionToColor(NormalizedDirection);
-        // fluidSolver.rOld[index] += color.r * speed;
-        // fluidSolver.gOld[index] += color.g * speed;
-        // fluidSolver.bOld[index] += color.b * speed;
+        var index = fluidSolver.getIndexForCellPosition(x, y);
 
-        fluidSolver.uOld[index] += NormalizedDirection.x * m_strenght;
-        fluidSolver.vOld[index] += NormalizedDirection.z * m_strenght;
-    }
-
-    private void UpdateFluidSolver()
-    {
-        for (int i = 0; i < m_iterationCount; i++)
-        {
-            fluidSolver.update();
-        }
+        float u = NormalizedDirection.x * m_strenght;
+        float v = NormalizedDirection.z * m_strenght;
+        fluidSolver.uOld[index] += u;
+        fluidSolver.vOld[index] += v;
     }
 }
