@@ -27,8 +27,8 @@ public class FlowmapRenderer : RayProcessor
                 var ray = openFlowmapConfig.RayProjector.GetRay(indexX, indexY);
                 var color = Utils.ConvertDirectionToColor(new Vector2(ray.direction.x, ray.direction.z));
                 // texture pixels are mirrored diagonally along y = -x line
-                var correctX = textureSize - 1 - v;
-                var correctY = textureSize - 1 - u;
+                var correctX = textureSize - 1 - u;
+                var correctY = textureSize - 1 - v;
                 colors[correctX * textureSize + correctY] = color;
             }
         }
