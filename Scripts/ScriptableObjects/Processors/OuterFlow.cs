@@ -5,7 +5,7 @@ using UnityEngine;
 public class OuterFlow : RayProcessor
 {
     [Range(0.1f, 2)] public float m_radius = 0.5f;
-    [Range(4, 30)] public int ourerFlowRayCount = 12;
+    [Range(4, 30)] public int outerFlowRayCount = 12;
 
     private Collider[] m_colliders;
     public override void Initialize()
@@ -25,11 +25,11 @@ public class OuterFlow : RayProcessor
 
             if (nearbyColliders > 0)
             {
-                // Cast ray in ourerFlowRayCount directions from the ray origin aligned with the mesh surface
+                // Cast ray in outerFlowRayCount directions from the ray origin aligned with the mesh surface
                 var directions = new List<Vector3>();
-                for (int j = 0; j < ourerFlowRayCount; j++)
+                for (int j = 0; j < outerFlowRayCount; j++)
                 {
-                    float angle = j * Mathf.PI * 2 / ourerFlowRayCount;
+                    float angle = j * Mathf.PI * 2 / outerFlowRayCount;
                     Vector3 direction = new Vector3(Mathf.Cos(angle), 0, Mathf.Sin(angle));
                     directions.Add(direction);
                 }
