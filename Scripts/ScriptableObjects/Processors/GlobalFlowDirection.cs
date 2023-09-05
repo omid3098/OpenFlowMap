@@ -3,7 +3,7 @@ using UnityEngine;
 public class GlobalFlowDirection : RayProcessor
 {
     [SerializeField] Vector2 m_flowDirection = new Vector2(1, 0);
-    [SerializeField, Range(0f, 1f)] float m_flowStrenght = 0.5f;
+    [SerializeField, Range(0f, 1f)] float m_flowStrength = 0.5f;
 
     internal override void Execute()
     {
@@ -13,7 +13,7 @@ public class GlobalFlowDirection : RayProcessor
         {
             Ray ray = rays[i];
             // push the ray in the direction of the flow
-            ray.direction = Vector3.Lerp(ray.direction, new Vector3(m_flowDirection.x, 0, m_flowDirection.y), m_flowStrenght);
+            ray.direction = Vector3.Lerp(ray.direction, new Vector3(m_flowDirection.x, 0, m_flowDirection.y), m_flowStrength);
             ray.direction.Normalize();
             rays[i] = ray;
         }

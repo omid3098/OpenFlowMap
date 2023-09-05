@@ -7,7 +7,7 @@ using System.Collections;
 public class RealisticFlow : RayProcessor
 {
     [SerializeField] Vector2 m_directions = new Vector2(1, 0);
-    [SerializeField, Range(0.001f, 100f)] float m_strenght = 1;
+    [SerializeField, Range(0.001f, 100f)] float m_strength = 1;
     [SerializeField, Range(0.1f, 1f)] float m_radius = 1;
     [SerializeField, Range(1, 128)] int m_iterationCount = 10;
     [SerializeField] bool dynamicSim = true;
@@ -145,8 +145,8 @@ public class RealisticFlow : RayProcessor
         else if (y > resolution) y = resolution;
         var index = fluidSolver.getIndexForCellPosition(x, y);
 
-        float u = NormalizedDirection.z * m_strenght;
-        float v = NormalizedDirection.x * m_strenght;
+        float u = NormalizedDirection.z * m_strength;
+        float v = NormalizedDirection.x * m_strength;
         fluidSolver.uOld[index] += u;
         fluidSolver.vOld[index] += v;
     }

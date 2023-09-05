@@ -14,5 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_directions: {x: 1, y: -0.04}
   m_rayDistance: 0.385
-  m_strenght: 0.518
+  m_strength: 0.518
   m_rayCount: 158

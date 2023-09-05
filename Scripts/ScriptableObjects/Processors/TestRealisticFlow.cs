@@ -7,7 +7,7 @@ public class TestRealisticFlow : RayProcessor
 {
     [SerializeField] Vector2 m_directions = new Vector2(1, 0);
     [SerializeField, Range(0.1f, 1f)] float m_rayDistance = 0.2f;
-    [SerializeField, Range(0.001f, 1f)] float m_strenght = 1;
+    [SerializeField, Range(0.001f, 1f)] float m_strength = 1;
     [SerializeField] int m_rayCount = 1;
     private Vector3 target;
     private Vector3 flowDirection;
@@ -30,7 +30,7 @@ public class TestRealisticFlow : RayProcessor
         center = openFlowmapConfig.PlaneOrigin;
         color = Color.red;
         target = center + NormalizedDirection * radius;
-        flowDirection = -NormalizedDirection * m_strenght;
+        flowDirection = -NormalizedDirection * m_strength;
 
         // define a line. the center of the line is target and the direction is perpendicular to the flow direction
         // we will use this line to cast rays from the target toward the flow direction
@@ -67,7 +67,7 @@ public class TestRealisticFlow : RayProcessor
             var reflected = Vector3.Reflect(direction, hit.normal);
             // keep reflected vector on the plane
             reflected.y = 0;
-            // make the lenght of the reflected vector the same as the original vector
+            // make the length of the reflected vector the same as the original vector
             reflected = reflected.normalized * direction.magnitude;
 
             // add flow direction to the reflected direction

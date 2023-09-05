@@ -90,9 +90,9 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _FlowStrenght: 0.52
+    - _FlowStrength: 0.52
     - _Metalic: 0
-    - _NormalStrenght: 0.22
+    - _NormalStrength: 0.22
     - _QueueControl: 0
     - _QueueOffset: 0
     - _Scale: 3.1
