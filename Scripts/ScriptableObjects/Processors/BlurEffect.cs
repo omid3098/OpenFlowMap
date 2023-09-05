@@ -5,6 +5,10 @@ public class BlurEffect : RayProcessor
     [SerializeField, Range(0, 5)] int m_blurSize = 1;
     internal override void Execute()
     {
+        if (m_blurSize == 0)
+        {
+            return;
+        }
         var rays = openFlowmapConfig.RayProjector.GetRays();
         BlurRays(rays, m_blurSize);
     }
@@ -12,7 +16,7 @@ public class BlurEffect : RayProcessor
     void BlurRays(Ray[] rays, int size)
     {
         var width = openFlowmapConfig.RayCount;
-
+        Ray[] outputRays = new Ray[rays.Length];
         for (int x = 0; x < width; x++)
         {
             for (int y = 0; y < width; y++)
@@ -36,8 +40,12 @@ public class BlurEffect : RayProcessor
 
                 averageDirection /= count;
                 var newRay = new Ray(ray.origin, averageDirection);
-                rays[rayIndex] = newRay;
+                outputRays[rayIndex] = newRay;
             }
+        }
+        for (int i = 0; i < rays.Length; i++)
+        {
+            rays[i] = outputRays[i];
         }
     }
 }
