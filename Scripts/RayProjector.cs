@@ -8,16 +8,16 @@ public class RayProjector
     private Vector2 m_size;
     private Plane m_plane;
     private Vector3 m_planeOrigin;
-    private float m_rayLenght = 0.5f;
+    private float m_rayLength = 0.5f;
 
     public RayProjector(
         Vector3 size,
         Plane plane,
         Vector3 planeOrigin,
         int rayCount,
-        float rayLenght = 0.5f)
+        float rayLength = 0.5f)
     {
-        m_rayLenght = rayLenght;
+        m_rayLength = rayLength;
         m_rayCount = rayCount;
         m_plane = plane;
         m_planeOrigin = planeOrigin;
@@ -48,7 +48,7 @@ public class RayProjector
         {
             var ray = m_rays[i];
             var color = Utils.ConvertDirectionToColor(new Vector2(ray.direction.x, ray.direction.z));
-            Debug.DrawRay(ray.origin, new Vector3(ray.direction.x, ray.direction.y * 0.2f, ray.direction.z) * m_rayLenght, color);
+            Debug.DrawRay(ray.origin, new Vector3(ray.direction.x, ray.direction.y * 0.2f, ray.direction.z) * m_rayLength, color);
         }
     }
 

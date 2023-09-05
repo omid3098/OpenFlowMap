@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: OuterFlow
   m_EditorClassIdentifier: 
   m_radius: 0.22
-  ourerFlowRayCount: 17
+  outerFlowRayCount: 17
