@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: RealisticFlow
   m_EditorClassIdentifier: 
   m_directions: {x: 1, y: 0}
-  m_strength: 4
+  m_strength: 3
   m_radius: 0.1
-  m_iterationCount: 40
+  m_iterationCount: 50

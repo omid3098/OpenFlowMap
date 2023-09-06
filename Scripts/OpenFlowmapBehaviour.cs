@@ -21,7 +21,6 @@ public class OpenFlowmapBehaviour : MonoBehaviour
 
     private void OnValidate()
     {
-        ApplyTexture();
         Process();
 #if UNITY_EDITOR
         if (m_updateCoroutine != null)
@@ -88,12 +87,12 @@ public class OpenFlowmapBehaviour : MonoBehaviour
             m_rayLength);
         for (int i = 0; i < m_processors.Length; i++)
         {
-            RayProcessor effector = m_processors[i];
-            if (effector != null)
+            RayProcessor processor = m_processors[i];
+            if (processor != null)
             {
-                effector.Register(this);
-                effector.Initialize();
-                effector.Execute(m_rayProjector);
+                processor.Register(this);
+                processor.Initialize();
+                processor.Execute(m_rayProjector);
             }
         }
     }
@@ -131,6 +130,7 @@ public class OpenFlowmapBehaviour : MonoBehaviour
         DestroyImmediate(texture);
         SaveTexture(bytes);
         Debug.Log("BakeTexture" + m_textureResolution);
+        ApplyTexture();
     }
 
     private void SaveTexture(byte[] bytes)
@@ -184,5 +184,10 @@ public class OpenFlowmapBehaviour : MonoBehaviour
         {
             processor.Draw();
         }
+    }
+
+    private void OnDestroy()
+    {
+        m_processEveryFrame = false;
     }
 }
