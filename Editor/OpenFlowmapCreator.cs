@@ -27,7 +27,7 @@ public class OpenFlowmapCreator
 
         // Add the OpenFlowmap component to the GameObject
         var _flowmapBehaviour = flowmapObject.AddComponent<OpenFlowmapBehaviour>();
-        _flowmapBehaviour.Initialize();
+        _flowmapBehaviour.Process();
 
 
         // Set the new GameObject as the active selection in the Editor

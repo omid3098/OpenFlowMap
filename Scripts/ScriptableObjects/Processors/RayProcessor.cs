@@ -1,22 +1,23 @@
-using System;
 using UnityEngine;
 
 public abstract class RayProcessor : ScriptableObject
 {
-    protected OpenFlowmapConfig openFlowmapConfig;
-    public void Register(OpenFlowmapConfig openFlowmap)
+    protected OpenFlowmapBehaviour openFlowmapBehaviour;
+
+    public void Register(OpenFlowmapBehaviour openFlowmap)
     {
-        this.openFlowmapConfig = openFlowmap;
+        openFlowmapBehaviour = openFlowmap;
     }
 
     public virtual void Initialize() { }
-    internal abstract void Execute();
+
+    internal abstract void Execute(RayProjector rayProjector);
 
     private void OnValidate()
     {
-        if (openFlowmapConfig != null)
+        if (openFlowmapBehaviour != null)
         {
-            openFlowmapConfig.Initialize();
+            openFlowmapBehaviour.RayProcessorOnValidate(this);
         }
     }
 

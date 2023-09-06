@@ -16,5 +16,3 @@ MonoBehaviour:
   m_strength: 4
   m_radius: 0.1
   m_iterationCount: 40
-  dynamicSim: 0
-  isRunning: 1

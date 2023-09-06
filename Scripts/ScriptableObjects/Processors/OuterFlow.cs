@@ -13,15 +13,15 @@ public class OuterFlow : RayProcessor
         m_colliders = new Collider[1];
     }
 
-    internal override void Execute()
+    internal override void Execute(RayProjector rayProjector)
     {
-        Ray[] mainRaysArray = openFlowmapConfig.RayProjector.GetRays();
+        Ray[] mainRaysArray = rayProjector.GetRays();
         for (int i = 0; i < mainRaysArray.Length; i++)
         {
             Ray projectorRay = mainRaysArray[i];
             var position = projectorRay.origin;
             // use SphereOverlap to get all colliders in a radius
-            int nearbyColliders = Physics.OverlapSphereNonAlloc(position, m_radius, m_colliders, openFlowmapConfig.LayerMask);
+            int nearbyColliders = Physics.OverlapSphereNonAlloc(position, m_radius, m_colliders, openFlowmapBehaviour.LayerMask);
 
             if (nearbyColliders > 0)
             {
@@ -39,7 +39,7 @@ public class OuterFlow : RayProcessor
                 {
                     // Cast ray in direction
                     var ray = new Ray(position, direction);
-                    if (Physics.Raycast(ray, out var hit, m_radius, openFlowmapConfig.LayerMask))
+                    if (Physics.Raycast(ray, out var hit, m_radius, openFlowmapBehaviour.LayerMask))
                     {
                         var distance = Vector3.Distance(position, hit.point);
                         // if the distance is too short, this point should effect more than the others
