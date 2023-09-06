@@ -1,21 +1,22 @@
 using UnityEngine;
+
 [CreateAssetMenu(fileName = "BlurEffect", menuName = "OpenFlowmap/Processor/BlurEffect")]
 public class BlurEffect : RayProcessor
 {
     [SerializeField, Range(0, 5)] int m_blurSize = 1;
-    internal override void Execute()
+    internal override void Execute(RayProjector rayProjector)
     {
         if (m_blurSize == 0)
         {
             return;
         }
-        var rays = openFlowmapConfig.RayProjector.GetRays();
-        BlurRays(rays, m_blurSize);
+        var rays = rayProjector.GetRays();
+        int width = rayProjector.RayCount;
+        BlurRays(rays, width, m_blurSize);
     }
 
-    void BlurRays(Ray[] rays, int size)
+    void BlurRays(Ray[] rays, int width, int size)
     {
-        var width = openFlowmapConfig.RayCount;
         Ray[] outputRays = new Ray[rays.Length];
         for (int x = 0; x < width; x++)
         {

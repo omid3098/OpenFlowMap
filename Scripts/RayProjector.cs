@@ -1,6 +1,5 @@
-using System;
-using System.Collections.Generic;
 using UnityEngine;
+
 public class RayProjector
 {
     private Ray[] m_rays;
@@ -9,7 +8,7 @@ public class RayProjector
     private Plane m_plane;
     private Vector3 m_planeOrigin;
     private float m_rayLength = 0.5f;
-
+    
     public RayProjector(
         Vector3 size,
         Plane plane,
@@ -48,7 +47,8 @@ public class RayProjector
         {
             var ray = m_rays[i];
             var color = Utils.ConvertDirectionToColor(new Vector2(ray.direction.x, ray.direction.z));
-            Debug.DrawRay(ray.origin, new Vector3(ray.direction.x, ray.direction.y * 0.2f, ray.direction.z) * m_rayLength, color);
+            Gizmos.color = color;
+            Gizmos.DrawRay(ray.origin, new Vector3(ray.direction.x, ray.direction.y * 0.2f, ray.direction.z) * m_rayLength);
         }
     }
 
@@ -56,7 +56,12 @@ public class RayProjector
 
     internal Ray GetRay(int index) => m_rays[index];
     internal Ray GetRay(int x, int y) => m_rays[GetIndex(x, y)];
-
+    
+    internal int RayCount => m_rayCount;
+    internal Vector2 Size => m_size;
+    internal Plane Plane => m_plane;
+    internal Vector3 PlaneOrigin => m_planeOrigin;
+    internal float RayLength => m_rayLength;
 
     internal int GetNeighborIndex(int x, int y, int neighborIndex)
     {
