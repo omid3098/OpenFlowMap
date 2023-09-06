@@ -7,9 +7,7 @@ public class OpenFlowmapBehaviour : MonoBehaviour
     [SerializeField, Range(0f, 1f)] float m_rayLength = 0.5f;
     [SerializeField] RayProcessor[] m_processors;
     [SerializeField] bool m_processEveryFrame = false;
-    public enum Resolution { _32x32 = 32, _64x64 = 64, _128x128 = 128, _256x256 = 256, _512x512 = 512, _1024x1024 = 1024 }
-    [SerializeField] Resolution m_textureResolution = Resolution._128x128;
-    [SerializeField] public Texture2D m_texture;
+    [SerializeField] public RenderTexture m_renderTexture;
 
     [Header("Debug")]
     [SerializeField] bool m_drawGizmos = true;
@@ -75,7 +73,7 @@ public class OpenFlowmapBehaviour : MonoBehaviour
 
     private void Process(Vector3 size, Plane plane, Vector3 planeOrigin)
     {
-        if (m_texture == null)
+        if (m_renderTexture == null)
         {
             return;
         }
@@ -104,8 +102,8 @@ public class OpenFlowmapBehaviour : MonoBehaviour
         {
             return;
         }
-        var textureSize = (int)m_textureResolution;
-        Texture2D texture = new Texture2D(textureSize, textureSize, TextureFormat.RGBAFloat, false, false);
+        var textureSize = m_renderTexture.width;
+        Texture2D tempTexture = new Texture2D(textureSize, textureSize, TextureFormat.RGBAFloat, false, false);
         var colors = new Color[textureSize * textureSize];
         var projectorResolution = m_rayProjector.RayCount;
         // remap projector resolution to texture resolution
@@ -124,19 +122,26 @@ public class OpenFlowmapBehaviour : MonoBehaviour
                 colors[correctX * textureSize + correctY] = color;
             }
         }
-        texture.SetPixels(colors);
-        texture.Apply();
-        byte[] bytes = texture.EncodeToPNG();
-        DestroyImmediate(texture);
-        SaveTexture(bytes);
-        Debug.Log("BakeTexture" + m_textureResolution);
+        tempTexture.SetPixels(colors);
+        tempTexture.Apply();
+
+        if (m_renderTexture == null)
+        {
+            m_renderTexture = new RenderTexture(textureSize, textureSize, 24);
+        }
+        Graphics.Blit(tempTexture, m_renderTexture);
+
+        // byte[] bytes = texture.EncodeToPNG();
+        // DestroyImmediate(texture);
+        // SaveTexture(bytes);
+        // Debug.Log("BakeTexture" + m_textureResolution);
         ApplyTexture();
     }
 
     private void SaveTexture(byte[] bytes)
     {
         // save the texture as a png file at the same location of the current scene
-        var path = UnityEditor.AssetDatabase.GetAssetPath(m_texture);
+        var path = UnityEditor.AssetDatabase.GetAssetPath(m_renderTexture);
         System.IO.File.WriteAllBytes(path, bytes);
         // Refresh the AssetDatabase after saving the file
         UnityEditor.AssetDatabase.Refresh();
@@ -151,9 +156,9 @@ public class OpenFlowmapBehaviour : MonoBehaviour
     private void ApplyTexture()
     {
         var meshRenderer = GetComponent<MeshRenderer>();
-        if (meshRenderer != null && meshRenderer.sharedMaterial.GetTexture("_FlowMap") != m_texture)
+        if (meshRenderer != null && meshRenderer.sharedMaterial.GetTexture("_FlowMap") != m_renderTexture)
         {
-            meshRenderer.sharedMaterial.SetTexture("_FlowMap", m_texture);
+            meshRenderer.sharedMaterial.SetTexture("_FlowMap", m_renderTexture);
         }
     }
 
