@@ -129,7 +129,9 @@ public class OpenFlowmapBehaviour : MonoBehaviour
         {
             m_renderTexture = new RenderTexture(textureSize, textureSize, 24);
         }
+        var oldActive = RenderTexture.active;
         Graphics.Blit(tempTexture, m_renderTexture);
+        RenderTexture.active = oldActive;
 
         // byte[] bytes = texture.EncodeToPNG();
         // DestroyImmediate(texture);
