@@ -29,7 +29,7 @@ public class OpenFlowmapBehaviour : MonoBehaviour
             Unity.EditorCoroutines.Editor.EditorCoroutineUtility.StopCoroutine(m_updateCoroutine);
             m_updateCoroutine = null;
         }
-        if (m_processEveryFrame)
+        if (m_processEveryFrame && !UnityEditor.EditorApplication.isPlaying)
         {
             m_updateCoroutine = Unity.EditorCoroutines.Editor.EditorCoroutineUtility.StartCoroutineOwnerless(UpdateCoroutine());
         }
@@ -41,7 +41,7 @@ public class OpenFlowmapBehaviour : MonoBehaviour
 
     private System.Collections.IEnumerator UpdateCoroutine()
     {
-        while (true)
+        while (true && !UnityEditor.EditorApplication.isPlaying)
         {
             Update();
             UnityEditor.SceneView.RepaintAll();
