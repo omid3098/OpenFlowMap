@@ -3,7 +3,7 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "RealisticFlow", menuName = "OpenFlowmap/Processor/RealisticFlow")]
 public class RealisticFlow : RayProcessor
 {
-    [SerializeField] Vector2 m_directions = new Vector2(1, 0);
+    [SerializeField, Range(0, 360)] float angle = 0;
     [SerializeField, Range(0.001f, 2f)] float m_strength = 1;
     [SerializeField, Range(0.1f, 1f)] float m_radius = 1;
     [SerializeField, Range(1, 128)] int m_iterationCount = 10;
@@ -13,7 +13,14 @@ public class RealisticFlow : RayProcessor
     private MSAFluidSolver2D fluidSolver;
     private int resolution;
 
-    private Vector3 NormalizedDirection => new Vector3(m_directions.x, 0, m_directions.y).normalized;
+    private Vector3 NormalizedDirection
+    {
+        get
+        {
+            float radians = angle * Mathf.Deg2Rad;
+            return new Vector3(Mathf.Cos(radians), 0, Mathf.Sin(radians)).normalized;
+        }
+    }
 
     internal override void Execute(RayProjector rayProjector)
     {
@@ -30,23 +37,38 @@ public class RealisticFlow : RayProcessor
     private void Solve(RayProjector rayProjector)
     {
         // SetCurrentDirections(rayProjector);
-        AddInitialForce();
+        AddForceBasedOnAngle();
         Collide(rayProjector);
         fluidSolver.update();
         UpdateRayDirections(rayProjector);
     }
 
-    private void AddInitialForce()
+    private void AddForceBasedOnAngle()
     {
-        // add force from all points in the first row
         for (int x = 0; x < resolution; x++)
         {
-            // if (x % 5 == 0)
+            for (int y = 0; y < resolution; y++)
             {
-                AddForce(x, 0);
+                if (angle == 0 && y == 0)
+                    AddForce(x, y);
+                else if (angle > 0 && angle < 90 && (y == 0 || x == 0))
+                    AddForce(x, y);
+                else if (angle == 90 && x == 0)
+                    AddForce(x, y);
+                else if (angle > 90 && angle < 180 && (x == 0 || y == resolution - 1))
+                    AddForce(x, y);
+                else if (angle == 180 && y == resolution - 1)
+                    AddForce(x, y);
+                else if (angle > 180 && angle < 270 && (y == resolution - 1 || x == resolution - 1))
+                    AddForce(x, y);
+                else if (angle == 270 && x == resolution - 1)
+                    AddForce(x, y);
+                else if (angle > 270 && angle <= 360 && (x == resolution - 1 || y == 0))
+                    AddForce(x, y);
             }
         }
     }
+
 
     private void SetCurrentDirections(RayProjector rayProjector)
     {
@@ -115,15 +137,17 @@ public class RealisticFlow : RayProcessor
         fluidSolver.vOld[indexInSolver] = 0;
     }
 
-    private void AddForce(int x, int y)
+    private void AddForce(int x, int y, float weight = 1.0f)
     {
         if (x < 0) x = 0;
         else if (x > resolution) x = resolution;
         if (y < 0) y = 0;
         else if (y > resolution) y = resolution;
+
         var index = fluidSolver.getIndexForCellPosition(x, y);
-        float u = NormalizedDirection.z * m_strength;
-        float v = NormalizedDirection.x * m_strength;
+        float u = NormalizedDirection.z * m_strength * weight;
+        float v = NormalizedDirection.x * m_strength * weight;
+
         fluidSolver.uOld[index] = u;
         fluidSolver.vOld[index] = v;
     }

@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 192aea116d6efa7438eeba8c6d73ff73, type: 3}
   m_Name: RealisticFlow
   m_EditorClassIdentifier: 
-  m_directions: {x: 1, y: 0}
+  angle: 0
   m_strength: 1
   m_radius: 0.15
   m_iterationCount: 80
