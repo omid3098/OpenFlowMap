@@ -93,6 +93,7 @@ public class OpenFlowmapBehaviour : MonoBehaviour
                 processor.Execute(m_rayProjector);
             }
         }
+        BakeTexture();
     }
 
     [ContextMenu("Bake Texture")]

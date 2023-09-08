@@ -4,9 +4,11 @@ using UnityEngine;
 public class RealisticFlow : RayProcessor
 {
     [SerializeField] Vector2 m_directions = new Vector2(1, 0);
-    [SerializeField, Range(0.001f, 100f)] float m_strength = 1;
+    [SerializeField, Range(0.001f, 2f)] float m_strength = 1;
     [SerializeField, Range(0.1f, 1f)] float m_radius = 1;
     [SerializeField, Range(1, 128)] int m_iterationCount = 10;
+    [SerializeField, Range(0f, 1f)] float m_deltaT = 0.5f;
+    [SerializeField, Range(0f, 0.0005f)] float m_viscosity = 0.0001f;
 
     private MSAFluidSolver2D fluidSolver;
     private int resolution;
@@ -20,7 +22,7 @@ public class RealisticFlow : RayProcessor
         {
             fluidSolver = new MSAFluidSolver2D(resolution, resolution);
         }
-        fluidSolver.setFadeSpeed(0.003f).setDeltaT(0.5f).setVisc(0.0001f).setSolverIterations(m_iterationCount);
+        fluidSolver.setDeltaT(m_deltaT).setVisc(m_viscosity).setSolverIterations(m_iterationCount);
 
         Solve(rayProjector);
     }
@@ -28,8 +30,8 @@ public class RealisticFlow : RayProcessor
     private void Solve(RayProjector rayProjector)
     {
         // SetCurrentDirections(rayProjector);
-        Collide(rayProjector);
         AddInitialForce();
+        Collide(rayProjector);
         fluidSolver.update();
         UpdateRayDirections(rayProjector);
     }
@@ -39,9 +41,9 @@ public class RealisticFlow : RayProcessor
         // add force from all points in the first row
         for (int x = 0; x < resolution; x++)
         {
-            // if (x % 2 == 0)
+            // if (x % 5 == 0)
             {
-                AddForce(x, -10);
+                AddForce(x, 0);
             }
         }
     }
@@ -76,7 +78,7 @@ public class RealisticFlow : RayProcessor
                 float v = fluidSolver.v[indexSolver];
                 int indexRays = rayProjector.GetIndex(x, y);
                 Ray ray = rays[indexRays];
-                Vector3 newDirection = new Vector3(u, ray.direction.y, v).normalized;
+                Vector3 newDirection = new Vector3(v, ray.direction.y, u).normalized;
                 rays[indexRays] = new Ray(ray.origin, newDirection);
             }
         }
@@ -102,6 +104,10 @@ public class RealisticFlow : RayProcessor
 
     private void AddBarrier(int x, int y)
     {
+        if (x < 0) x = 0;
+        else if (x > resolution) x = resolution;
+        if (y < 0) y = 0;
+        else if (y > resolution) y = resolution;
         var indexInSolver = fluidSolver.getIndexForCellPosition(x, y);
         fluidSolver.u[indexInSolver] = 0;
         fluidSolver.v[indexInSolver] = 0;
@@ -116,10 +122,9 @@ public class RealisticFlow : RayProcessor
         if (y < 0) y = 0;
         else if (y > resolution) y = resolution;
         var index = fluidSolver.getIndexForCellPosition(x, y);
-
         float u = NormalizedDirection.z * m_strength;
         float v = NormalizedDirection.x * m_strength;
-        fluidSolver.uOld[index] += u;
-        fluidSolver.vOld[index] += v;
+        fluidSolver.uOld[index] = u;
+        fluidSolver.vOld[index] = v;
     }
 }

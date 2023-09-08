@@ -29,7 +29,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _FlowMap:
-        m_Texture: {fileID: 2800000, guid: 7a6f46daa47e3754f9bf31d6ce54c1d4, type: 3}
+        m_Texture: {fileID: 8400000, guid: 2ddbc509467e439468e9b9046d94f770, type: 2}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _FlowmapUnpack_2b26de3541b548dfaa680febb180f33f_FlowMap_958314920_Texture2D:

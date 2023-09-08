@@ -8,7 +8,8 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: SimpleFlow
-  m_Shader: {fileID: -6465566751694194690, guid: 67d3de5ce13dacd40b0c8d0075d59a79, type: 3}
+  m_Shader: {fileID: -6465566751694194690, guid: 67d3de5ce13dacd40b0c8d0075d59a79,
+    type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
@@ -24,7 +25,7 @@ Material:
     serializedVersion: 3
     m_TexEnvs:
     - _FlowMap:
-        m_Texture: {fileID: 2800000, guid: 7a6f46daa47e3754f9bf31d6ce54c1d4, type: 3}
+        m_Texture: {fileID: 8400000, guid: 2ddbc509467e439468e9b9046d94f770, type: 2}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _SampleCubemap_f6e1e1bc6ca648d4a661af284df99e70_Cube_1_Cubemap:
@@ -39,7 +40,15 @@ Material:
         m_Texture: {fileID: 2800000, guid: da4155f3c877e0f4583e4b5d81a6b282, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _SampleTexture2D_b7aa460fb7c94553a3c3ff1fe4e142ef_Texture_1_Texture2D:
+        m_Texture: {fileID: 2800000, guid: da4155f3c877e0f4583e4b5d81a6b282, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _SampleTexture2D_e3e8c4bc3d744847af0266e2bff9fb7e_Texture_1_Texture2D:
+        m_Texture: {fileID: 2800000, guid: da4155f3c877e0f4583e4b5d81a6b282, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Texture2DAsset_42700dfde9d644169ed7225c3be25521_Out_0_Texture2D:
         m_Texture: {fileID: 2800000, guid: da4155f3c877e0f4583e4b5d81a6b282, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
@@ -68,7 +77,8 @@ Material:
     - _DistortionScale: 1.69
     - _DistortionStrength: 0.0422
     - _Float: 0.17
-    - _FlowStrength: 0.085
+    - _FlowSpeed: 1
+    - _FlowStrength: 1
     - _NormalStrength: 0.5
     - _QueueControl: 0
     - _QueueOffset: 0
