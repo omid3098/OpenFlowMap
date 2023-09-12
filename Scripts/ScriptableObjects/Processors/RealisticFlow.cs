@@ -18,7 +18,7 @@ public class RealisticFlow : RayProcessor
         get
         {
             float radians = angle * Mathf.Deg2Rad;
-            return new Vector3(Mathf.Cos(radians), 0, Mathf.Sin(radians)).normalized;
+            return new Vector3(Mathf.Cos(radians), 0, Mathf.Sin(radians));
         }
     }
 
@@ -45,26 +45,27 @@ public class RealisticFlow : RayProcessor
 
     private void AddForceBasedOnAngle()
     {
+        Vector3 direction = NormalizedDirection * m_strength;
         for (int x = 0; x < resolution; x++)
         {
             for (int y = 0; y < resolution; y++)
             {
                 if (angle == 0 && y == 0)
-                    AddForce(x, y);
+                    AddForce(x, y, direction);
                 else if (angle > 0 && angle < 90 && (y == 0 || x == 0))
-                    AddForce(x, y);
+                    AddForce(x, y, direction);
                 else if (angle == 90 && x == 0)
-                    AddForce(x, y);
+                    AddForce(x, y, direction);
                 else if (angle > 90 && angle < 180 && (x == 0 || y == resolution - 1))
-                    AddForce(x, y);
+                    AddForce(x, y, direction);
                 else if (angle == 180 && y == resolution - 1)
-                    AddForce(x, y);
+                    AddForce(x, y, direction);
                 else if (angle > 180 && angle < 270 && (y == resolution - 1 || x == resolution - 1))
-                    AddForce(x, y);
+                    AddForce(x, y, direction);
                 else if (angle == 270 && x == resolution - 1)
-                    AddForce(x, y);
+                    AddForce(x, y, direction);
                 else if (angle > 270 && angle <= 360 && (x == resolution - 1 || y == 0))
-                    AddForce(x, y);
+                    AddForce(x, y, direction);
             }
         }
     }
@@ -100,8 +101,8 @@ public class RealisticFlow : RayProcessor
                 float v = fluidSolver.v[indexSolver];
                 int indexRays = rayProjector.GetIndex(x, y);
                 Ray ray = rays[indexRays];
-                Vector3 newDirection = new Vector3(v, ray.direction.y, u).normalized;
-                rays[indexRays] = new Ray(ray.origin, newDirection);
+                ray.direction = new Vector3(v, ray.direction.y, u);
+                rays[indexRays] = ray;
             }
         }
     }
@@ -137,7 +138,7 @@ public class RealisticFlow : RayProcessor
         fluidSolver.vOld[indexInSolver] = 0;
     }
 
-    private void AddForce(int x, int y, float weight = 1.0f)
+    private void AddForce(int x, int y, Vector3 direction, float weight = 1.0f)
     {
         if (x < 0) x = 0;
         else if (x > resolution) x = resolution;
@@ -145,8 +146,8 @@ public class RealisticFlow : RayProcessor
         else if (y > resolution) y = resolution;
 
         var index = fluidSolver.getIndexForCellPosition(x, y);
-        float u = NormalizedDirection.z * m_strength * weight;
-        float v = NormalizedDirection.x * m_strength * weight;
+        float u = direction.z * weight;
+        float v = direction.x * weight;
 
         fluidSolver.uOld[index] = u;
         fluidSolver.vOld[index] = v;

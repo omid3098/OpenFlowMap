@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "OuterFlow", menuName = "OpenFlowmap/Processor/OuterFlow")]
@@ -8,14 +7,19 @@ public class OuterFlow : RayProcessor
     [Range(4, 30)] public int outerFlowRayCount = 12;
 
     private Collider[] m_colliders;
+
     public override void Initialize()
     {
-        m_colliders = new Collider[1];
+        if (m_colliders == null)
+        {
+            m_colliders = new Collider[1];
+        }
     }
 
     internal override void Execute(RayProjector rayProjector)
     {
         Ray[] mainRaysArray = rayProjector.GetRays();
+        LayerMask layerMask = openFlowmapBehaviour.LayerMask;
         for (int i = 0; i < mainRaysArray.Length; i++)
         {
             Ray projectorRay = mainRaysArray[i];
@@ -25,21 +29,15 @@ public class OuterFlow : RayProcessor
 
             if (nearbyColliders > 0)
             {
+                var sum = Vector3.zero;
                 // Cast ray in outerFlowRayCount directions from the ray origin aligned with the mesh surface
-                var directions = new List<Vector3>();
                 for (int j = 0; j < outerFlowRayCount; j++)
                 {
                     float angle = j * Mathf.PI * 2 / outerFlowRayCount;
                     Vector3 direction = new Vector3(Mathf.Cos(angle), 0, Mathf.Sin(angle));
-                    directions.Add(direction);
-                }
 
-                var sum = Vector3.zero;
-                foreach (var direction in directions)
-                {
                     // Cast ray in direction
-                    var ray = new Ray(position, direction);
-                    if (Physics.Raycast(ray, out var hit, m_radius, openFlowmapBehaviour.LayerMask))
+                    if (Physics.Raycast(position, direction, out var hit, m_radius, layerMask))
                     {
                         var distance = Vector3.Distance(position, hit.point);
                         // if the distance is too short, this point should effect more than the others
@@ -54,8 +52,7 @@ public class OuterFlow : RayProcessor
                 // add the sum of all normals to the original ray direction
                 projectorRay.direction += sum;
 
-                var newRay = new Ray(position, projectorRay.direction);
-                mainRaysArray[i] = newRay;
+                mainRaysArray[i] = projectorRay;
             }
         }
     }

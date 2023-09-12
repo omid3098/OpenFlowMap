@@ -8,14 +8,17 @@ public class GlobalFlowDirection : RayProcessor
 
     internal override void Execute(RayProjector rayProjector)
     {
-        m_flowDirection = new Vector2(Mathf.Clamp(m_flowDirection.x, -1, 1), Mathf.Clamp(m_flowDirection.y, -1, 1));
+        if (m_flowStrength == 0f)
+        {
+            return;
+        }
+        Vector2 flowDirection = new Vector2(Mathf.Clamp(m_flowDirection.x, -1, 1), Mathf.Clamp(m_flowDirection.y, -1, 1));
         Ray[] rays = rayProjector.GetRays();
         for (int i = 0; i < rays.Length; i++)
         {
             Ray ray = rays[i];
             // push the ray in the direction of the flow
-            ray.direction = Vector3.Lerp(ray.direction, new Vector3(m_flowDirection.x, 0, m_flowDirection.y), m_flowStrength);
-            ray.direction.Normalize();
+            ray.direction = Vector3.Lerp(ray.direction, new Vector3(flowDirection.x, 0, flowDirection.y), m_flowStrength);
             rays[i] = ray;
         }
     }
