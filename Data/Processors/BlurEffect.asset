@@ -12,4 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 95c023d7a328843e89d2cfa72c29c14c, type: 3}
   m_Name: BlurEffect
   m_EditorClassIdentifier: 
-  m_blurSize: 1
+  m_blurSize: 2

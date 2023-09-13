@@ -134,14 +134,31 @@ public class OpenFlowmapBehaviour : MonoBehaviour
         {
             for (int v = 0; v < textureSize; v++)
             {
-                int indexX = (int)(u * remap);
-                int indexY = (int)(v * remap);
-                var ray = m_rayProjector.GetRay(indexX, indexY);
-                var color = Utils.ConvertDirectionToColor(ray.direction);
-                // texture pixels are mirrored diagonally along y = -x line
+                float indexX = u * remap;
+                float indexY = v * remap;
+
+                // Get neighboring points
+                int x0 = Mathf.FloorToInt(indexX);
+                int x1 = Mathf.Min(x0 + 1, projectorResolution - 1);
+                int y0 = Mathf.FloorToInt(indexY);
+                int y1 = Mathf.Min(y0 + 1, projectorResolution - 1);
+
+                // Calculate weights
+                float wx = indexX - x0;
+                float wy = indexY - y0;
+
+                // Fetch the nearest four simulation values
+                Color color00 = Utils.ConvertDirectionToColor(new Vector2(m_rayProjector.GetRay(x0, y0).direction.x, m_rayProjector.GetRay(x0, y0).direction.z));
+                Color color01 = Utils.ConvertDirectionToColor(new Vector2(m_rayProjector.GetRay(x0, y1).direction.x, m_rayProjector.GetRay(x0, y1).direction.z));
+                Color color10 = Utils.ConvertDirectionToColor(new Vector2(m_rayProjector.GetRay(x1, y0).direction.x, m_rayProjector.GetRay(x1, y0).direction.z));
+                Color color11 = Utils.ConvertDirectionToColor(new Vector2(m_rayProjector.GetRay(x1, y1).direction.x, m_rayProjector.GetRay(x1, y1).direction.z));
+
+                // Perform bilinear interpolation
+                Color interpolatedColor = color00 * (1 - wx) * (1 - wy) + color10 * wx * (1 - wy) + color01 * (1 - wx) * wy + color11 * wx * wy;
+
                 var correctX = textureSize - 1 - u;
                 var correctY = textureSize - 1 - v;
-                m_colors[correctX * textureSize + correctY] = color;
+                m_colors[correctX * textureSize + correctY] = interpolatedColor;
             }
         }
         m_tempTexture.SetPixels(m_colors);
