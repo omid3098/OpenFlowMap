@@ -46,26 +46,85 @@ public class RealisticFlow : RayProcessor
     private void AddForceBasedOnAngle()
     {
         Vector3 direction = NormalizedDirection * m_strength;
-        for (int x = 0; x < resolution; x++)
+
+        if (angle == 0 || angle == 360)
         {
+            int y = 0;
+            for (int x = 0; x < resolution; x++)
+            {
+                AddForce(x, y, direction);
+            }
+        }
+        else if (angle > 0 && angle < 90)
+        {
+            //(y == 0 || x == 0)
+            for (int x = 0; x < resolution; x++)
+            {
+                AddForce(x, 0, direction);
+            }
+            for (int y = 1; y < resolution; y++) // don't process (0, 0) again
+            {
+                AddForce(0, y, direction);
+            }
+        }
+        else if (angle == 90)
+        {
+            int x = 0;
             for (int y = 0; y < resolution; y++)
             {
-                if (angle == 0 && y == 0)
-                    AddForce(x, y, direction);
-                else if (angle > 0 && angle < 90 && (y == 0 || x == 0))
-                    AddForce(x, y, direction);
-                else if (angle == 90 && x == 0)
-                    AddForce(x, y, direction);
-                else if (angle > 90 && angle < 180 && (x == 0 || y == resolution - 1))
-                    AddForce(x, y, direction);
-                else if (angle == 180 && y == resolution - 1)
-                    AddForce(x, y, direction);
-                else if (angle > 180 && angle < 270 && (y == resolution - 1 || x == resolution - 1))
-                    AddForce(x, y, direction);
-                else if (angle == 270 && x == resolution - 1)
-                    AddForce(x, y, direction);
-                else if (angle > 270 && angle <= 360 && (x == resolution - 1 || y == 0))
-                    AddForce(x, y, direction);
+                AddForce(x, y, direction);
+            }
+        }
+        else if (angle > 90 && angle < 180)
+        {
+            //(x == 0 || y == resolution - 1))
+            for (int x = 0; x < resolution; x++)
+            {
+                AddForce(x, resolution - 1, direction);
+            }
+            for (int y = 0; y < resolution - 1; y++) // don't process (0, resolution-1) again
+            {
+                AddForce(0, y, direction);
+            }
+        }
+        else if (angle == 180)
+        {
+            int y = resolution - 1;
+            for (int x = 0; x < resolution; x++)
+            {
+                AddForce(x, y, direction);
+            }
+        }
+        else if (angle > 180 && angle < 270)
+        {
+            //(y == resolution - 1 || x == resolution - 1)
+            for (int x = 0; x < resolution; x++)
+            {
+                AddForce(x, resolution - 1, direction);
+            }
+            for (int y = 0; y < resolution - 1; y++) // don't process (resolution-1, resolution-1) again
+            {
+                AddForce(resolution - 1, y, direction);
+            }
+        }
+        else if (angle == 270)
+        {
+            int x = resolution - 1;
+            for (int y = 0; y < resolution; y++)
+            {
+                AddForce(x, y, direction);
+            }
+        }
+        else if (angle > 270 && angle < 360)
+        {
+            //(x == resolution - 1 || y == 0)
+            for (int x = 0; x < resolution; x++)
+            {
+                AddForce(x, 0, direction);
+            }
+            for (int y = 1; y < resolution; y++) // don't process (resolution-1, 0) again
+            {
+                AddForce(resolution - 1, y, direction);
             }
         }
     }
@@ -79,11 +138,11 @@ public class RealisticFlow : RayProcessor
         {
             for (int y = 0; y < resolution; y++)
             {
-                int indexRays = rayProjector.GetIndex(x, y);
-                Ray ray = rays[indexRays];
-                int indexSolver = fluidSolver.getIndexForCellPosition(x, y);
-                fluidSolver.u[indexSolver] = ray.direction.x;
-                fluidSolver.v[indexSolver] = ray.direction.z;
+                int indexInRays = rayProjector.GetIndex(x, y);
+                Ray ray = rays[indexInRays];
+                int indexInSolver = fluidSolver.getIndexForCellPosition(x + 1, y + 1);
+                fluidSolver.u[indexInSolver] = ray.direction.x;
+                fluidSolver.v[indexInSolver] = ray.direction.z;
             }
         }
     }
@@ -96,13 +155,13 @@ public class RealisticFlow : RayProcessor
         {
             for (int y = 0; y < resolution; y++)
             {
-                int indexSolver = fluidSolver.getIndexForCellPosition(x, y);
-                float u = fluidSolver.u[indexSolver];
-                float v = fluidSolver.v[indexSolver];
-                int indexRays = rayProjector.GetIndex(x, y);
-                Ray ray = rays[indexRays];
+                int indexInSolver = fluidSolver.getIndexForCellPosition(x + 1, y + 1);
+                float u = fluidSolver.u[indexInSolver];
+                float v = fluidSolver.v[indexInSolver];
+                int indexInRays = rayProjector.GetIndex(x, y);
+                Ray ray = rays[indexInRays];
                 ray.direction = new Vector3(v, ray.direction.y, u);
-                rays[indexRays] = ray;
+                rays[indexInRays] = ray;
             }
         }
     }
@@ -127,11 +186,7 @@ public class RealisticFlow : RayProcessor
 
     private void AddBarrier(int x, int y)
     {
-        if (x < 0) x = 0;
-        else if (x > resolution) x = resolution;
-        if (y < 0) y = 0;
-        else if (y > resolution) y = resolution;
-        var indexInSolver = fluidSolver.getIndexForCellPosition(x, y);
+        int indexInSolver = fluidSolver.getIndexForCellPosition(x + 1, y + 1);
         fluidSolver.u[indexInSolver] = 0;
         fluidSolver.v[indexInSolver] = 0;
         fluidSolver.uOld[indexInSolver] = 0;
@@ -140,16 +195,11 @@ public class RealisticFlow : RayProcessor
 
     private void AddForce(int x, int y, Vector3 direction, float weight = 1.0f)
     {
-        if (x < 0) x = 0;
-        else if (x > resolution) x = resolution;
-        if (y < 0) y = 0;
-        else if (y > resolution) y = resolution;
-
-        var index = fluidSolver.getIndexForCellPosition(x, y);
+        int indexInSolver = fluidSolver.getIndexForCellPosition(x + 1, y + 1);
         float u = direction.z * weight;
         float v = direction.x * weight;
 
-        fluidSolver.uOld[index] = u;
-        fluidSolver.vOld[index] = v;
+        fluidSolver.uOld[indexInSolver] = u;
+        fluidSolver.vOld[indexInSolver] = v;
     }
 }
