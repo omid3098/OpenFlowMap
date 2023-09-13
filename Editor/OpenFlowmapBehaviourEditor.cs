@@ -7,11 +7,21 @@ public class OpenFlowmapBehaviourEditor : Editor
     public override void OnInspectorGUI()
     {
         base.OnInspectorGUI();
-        if (GUILayout.Button("Bake Texture"))
+        if (GUILayout.Button("Save Flowmap"))
         {
-            if (target is OpenFlowmapBehaviour flowmap)
+            string path = EditorUtility.SaveFilePanelInProject("Save Flowmap", "flowmap", "png", "Save the current flowmap as png");
+            if (!string.IsNullOrEmpty(path) && target is OpenFlowmapBehaviour flowmap)
             {
-                flowmap.BakeTexture();
+                flowmap.SaveTexture(path);
+
+                // Refresh the AssetDatabase after saving the file
+                AssetDatabase.Refresh();
+
+                var textureImporter = AssetImporter.GetAtPath(path) as TextureImporter;
+                textureImporter.textureType = TextureImporterType.NormalMap;
+                textureImporter.textureCompression = TextureImporterCompression.Uncompressed;
+                textureImporter.crunchedCompression = false;
+                textureImporter.SaveAndReimport();
             }
         }
     }

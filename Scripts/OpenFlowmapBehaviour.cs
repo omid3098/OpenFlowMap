@@ -108,8 +108,7 @@ public class OpenFlowmapBehaviour : MonoBehaviour
         BakeTexture();
     }
 
-    [ContextMenu("Bake Texture")]
-    public void BakeTexture()
+    private void BakeTexture()
     {
         if (m_rayProjector == null)
         {
@@ -159,21 +158,6 @@ public class OpenFlowmapBehaviour : MonoBehaviour
         ApplyTexture();
     }
 
-    private void SaveTexture(byte[] bytes)
-    {
-        // save the texture as a png file at the same location of the current scene
-        var path = UnityEditor.AssetDatabase.GetAssetPath(m_renderTexture);
-        System.IO.File.WriteAllBytes(path, bytes);
-        // Refresh the AssetDatabase after saving the file
-        UnityEditor.AssetDatabase.Refresh();
-
-        var textureImporter = UnityEditor.AssetImporter.GetAtPath(path) as UnityEditor.TextureImporter;
-        textureImporter.textureType = UnityEditor.TextureImporterType.NormalMap;
-        textureImporter.textureCompression = UnityEditor.TextureImporterCompression.Uncompressed;
-        textureImporter.crunchedCompression = false;
-        textureImporter.SaveAndReimport();
-    }
-
     private void ApplyTexture()
     {
         var meshRenderer = GetComponent<MeshRenderer>();
@@ -181,6 +165,17 @@ public class OpenFlowmapBehaviour : MonoBehaviour
         {
             meshRenderer.sharedMaterial.SetTexture("_FlowMap", m_renderTexture);
         }
+    }
+
+    public void SaveTexture(string path)
+    {
+        if (m_tempTexture == null)
+        {
+            Debug.LogError("Flowmap is not available.");
+            return;
+        }
+        byte[] bytes = m_tempTexture.EncodeToPNG();
+        System.IO.File.WriteAllBytes(path, bytes);
     }
 
     private void OnDrawGizmos()
