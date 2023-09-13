@@ -16,17 +16,23 @@ public class RayProjector
         int rayCount,
         float rayLength = 0.5f)
     {
-        m_rayLength = rayLength;
-        m_rayCount = rayCount;
-        m_plane = plane;
-        m_planeOrigin = planeOrigin;
-        m_rays = new Ray[rayCount * rayCount];
-        m_size = new Vector2(size.x, size.z);
-        InitializeRaysAlongPlane();
+        ResizeRays(rayCount);
+        InitializeRaysAlongPlane(size, plane, planeOrigin, rayLength);
     }
 
-    private void InitializeRaysAlongPlane()
+    internal void ResizeRays(int rayCount)
     {
+        m_rayCount = rayCount;
+        m_rays = new Ray[rayCount * rayCount];
+    }
+
+    public void InitializeRaysAlongPlane(Vector3 size, Plane plane, Vector3 planeOrigin, float rayLength = 0.5f)
+    {
+        m_size = new Vector2(size.x, size.z);
+        m_plane = plane;
+        m_planeOrigin = planeOrigin;
+        m_rayLength = rayLength;
+        
         var rayIndex = 0;
         var raySpacing = m_size / m_rayCount;
         var rayOrigin = m_planeOrigin - new Vector3(m_size.x / 2, 0, m_size.y / 2) + new Vector3(raySpacing.x / 2, 0, raySpacing.y / 2);
@@ -46,9 +52,10 @@ public class RayProjector
         for (int i = 0; i < m_rays.Length; i++)
         {
             var ray = m_rays[i];
-            var color = Utils.ConvertDirectionToColor(new Vector2(ray.direction.x, ray.direction.z));
+            Vector3 direction = ray.direction;
+            var color = Utils.ConvertDirectionToColor(direction);
             Gizmos.color = color;
-            Gizmos.DrawRay(ray.origin, new Vector3(ray.direction.x, ray.direction.y * 0.2f, ray.direction.z) * m_rayLength);
+            Gizmos.DrawRay(ray.origin, new Vector3(direction.x * m_rayLength, direction.y * 0.2f * m_rayLength, direction.z * m_rayLength));
         }
     }
 

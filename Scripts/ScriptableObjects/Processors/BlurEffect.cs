@@ -4,6 +4,9 @@ using UnityEngine;
 public class BlurEffect : RayProcessor
 {
     [SerializeField, Range(0, 5)] int m_blurSize = 1;
+
+    private Ray[] m_outputRays = null;
+
     internal override void Execute(RayProjector rayProjector)
     {
         if (m_blurSize == 0)
@@ -12,12 +15,15 @@ public class BlurEffect : RayProcessor
         }
         var rays = rayProjector.GetRays();
         int width = rayProjector.RayCount;
+        if (m_outputRays == null || m_outputRays.Length != rays.Length)
+        {
+            m_outputRays = new Ray[rays.Length];
+        }
         BlurRays(rays, width, m_blurSize);
     }
 
     void BlurRays(Ray[] rays, int width, int size)
     {
-        Ray[] outputRays = new Ray[rays.Length];
         for (int x = 0; x < width; x++)
         {
             for (int y = 0; y < width; y++)
@@ -40,13 +46,13 @@ public class BlurEffect : RayProcessor
                 }
 
                 averageDirection /= count;
-                var newRay = new Ray(ray.origin, averageDirection);
-                outputRays[rayIndex] = newRay;
+                ray.direction = averageDirection;
+                m_outputRays[rayIndex] = ray;
             }
         }
         for (int i = 0; i < rays.Length; i++)
         {
-            rays[i] = outputRays[i];
+            rays[i] = m_outputRays[i];
         }
     }
 }
