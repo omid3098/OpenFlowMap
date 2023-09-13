@@ -1168,7 +1168,6 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 16
   m_rayCount: 100
-  m_rayLength: 0.5
   m_processors:
   - {fileID: 11400000, guid: 08f8b7408a914e048bd30a756b5e7594, type: 2}
   - {fileID: 11400000, guid: 2f7986c436f7bce4887375ec31fd3dff, type: 2}
@@ -1176,6 +1175,7 @@ MonoBehaviour:
   m_renderTexture: {fileID: 8400000, guid: 2ddbc509467e439468e9b9046d94f770, type: 2}
   m_drawGizmos: 1
   m_drawGizmosOnSelected: 1
+  m_rayLength: 0.5
 --- !u!65 &2008683905
 BoxCollider:
   m_ObjectHideFlags: 0
