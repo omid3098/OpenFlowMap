@@ -1,7 +1,10 @@
 # OpenFlowmap
 
-<img width="771" alt="image" src="https://github.com/omid3098/OpenFlowMap/assets/6388730/a94c2169-190a-4bd3-9f02-5c2f9037eaa1">
+<!--- <img width="771" alt="image" src="https://github.com/omid3098/OpenFlowMap/assets/6388730/a94c2169-190a-4bd3-9f02-5c2f9037eaa1"> --->
 
+![OpenFlowmap-debug](https://github.com/omid3098/OpenFlowMap/assets/6388730/99f03ee2-050b-4db9-bf24-742dc080bd9f)
+
+![OpenFlowmap-water](https://github.com/omid3098/OpenFlowMap/assets/6388730/f5b50903-f05a-47c2-af22-92b22f1b82ab)
 
 Generate flowmap dynamically from your scene.
 
@@ -20,38 +23,28 @@ TODO: Add UPM installation instructions
 ## Usage
 
 - Create a new Flowmap_Plane in your scene. (Right click in the hierarchy -> OpenFlowmap)
-
-  <img width="269" alt="image" src="https://github.com/omid3098/OpenFlowMap/assets/6388730/3e2ef15a-f0ce-4e36-b625-2c07bef80903">
-
-
-- We need an OpenFlowmap configuration. Create a new one in your project (Right click in the project window -> Create -> OpenFlowmap -> OpenFlowmapConfig) and assign it to the OpenFlowmap object.
-  You can set the layer mask, number of rays, ray processors to use, etc.
-
-  <img width="268" alt="image" src="https://github.com/omid3098/OpenFlowMap/assets/6388730/75bfa26f-5fb3-4492-a554-2ee37ccb769c">
+  
+  <img width="245" alt="image" src="https://github.com/omid3098/OpenFlowMap/assets/6388730/d53f2b88-c5b3-4def-8453-518cef7023ba">
 
 
-- Now you need some processors to affect the flowmap. So far I have implemented these processors:
-
+- Drag and drop processors like _**RealisticFlow**_ and _**BlurEffect**_ to the Processors list. you can find them in _**OpenFlowmap/Data/Processors/**_ directory. Please note that the processors will be executed in the order they are in the list. so if you want to blur the flowmap, you need to add the blur processor after something like outer flow.
   - OuterFlow: This processor will push the flowmap in the direction of the normal of the mesh.
-  - GlobalFlowDirection: This processor will push the flowmap in a global direction.
   - BlurEffect: This processor will blur the flowmap. useful for smoothing out the flowmap when you have a low number of rays.
-  - FlowmapRenderer: This processor will render the flowmap to a texture.
+  - RealisticFlow: This processor will simulate a realistic flow
 
-- Add the processors you want to use to the OpenFlowmap object. Please note that the processors will be executed in the order they are in the list. so if you want to blur the flowmap, you need to add the blur processor after something like outer flow. or putting the flowmap renderer at the end of the list.
-- Or use available ones in Sample->Data->Processors directory (drag them into the processors field of the configuration file)
+    <img width="236" alt="image" src="https://github.com/omid3098/OpenFlowMap/assets/6388730/0decc163-7a15-425c-a865-1b8631437585">
 
-  <img width="262" alt="image" src="https://github.com/omid3098/OpenFlowMap/assets/6388730/2f7a690e-df2a-4584-858a-62ef23da1e8b">
+- Select the Layermask to check for obstacles along the flow.
+- Create a RenderTexture and assign it to the render texture field in the OpenFlowmap Behaviour
+- You can enable ProcessEveryFrame to update the changes everyframe. like when you want to change the position of obstacles.
 
-- You can Render the flowmap to a texture by adding a FlowmapRenderer processor to the OpenFlowmap configuration. it will create a texture at the same directory as your scene file. (feel free to change it)
-
-There are few sample shaders and materials in Sample -> Shaders directory. you can use them to visualize the flowmap. just drag and drop desired material to the flowmap plane.
-
-
+There are few sample shaders and materials in Sample directory. you can use them to visualize the flowmap. just drag and drop desired material to the flowmap plane.
 
 
 
 
 ## Example usage using sample processors:
 
-https://github.com/omid3098/OpenFlowMap/assets/6388730/b84016ae-eb9d-4331-acdd-f3b3f8d9a665
+
+https://github.com/omid3098/OpenFlowMap/assets/6388730/451b602e-d59a-4bdb-b596-2e5c0e3acdcf
 
