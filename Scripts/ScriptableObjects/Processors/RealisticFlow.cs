@@ -3,7 +3,7 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "RealisticFlow", menuName = "OpenFlowmap/Processor/RealisticFlow")]
 public class RealisticFlow : RayProcessor
 {
-    [SerializeField, Range(0, 360)] float angle = 0;
+    [SerializeField, Range(0, 360)] float m_angle = 0;
     [SerializeField, Range(0.001f, 2f)] float m_strength = 1;
     [SerializeField, Range(0.1f, 1f)] float m_radius = 1;
     [SerializeField, Range(1, 128)] int m_iterationCount = 10;
@@ -12,15 +12,6 @@ public class RealisticFlow : RayProcessor
 
     private MSAFluidSolver2D fluidSolver;
     private int resolution;
-
-    private Vector3 NormalizedDirection
-    {
-        get
-        {
-            float radians = angle * Mathf.Deg2Rad;
-            return new Vector3(Mathf.Cos(radians), 0, Mathf.Sin(radians));
-        }
-    }
 
     internal override void Execute(RayProjector rayProjector)
     {
@@ -45,9 +36,10 @@ public class RealisticFlow : RayProcessor
 
     private void AddForceBasedOnAngle()
     {
-        Vector3 direction = NormalizedDirection * m_strength;
+        float radians = m_angle * Mathf.Deg2Rad;
+        Vector3 direction = new Vector3(Mathf.Cos(radians) * m_strength, 0, Mathf.Sin(radians) * m_strength);
 
-        if (angle == 0 || angle == 360)
+        if (m_angle == 0 || m_angle == 360)
         {
             int y = 0;
             for (int x = 0; x < resolution; x++)
@@ -55,7 +47,7 @@ public class RealisticFlow : RayProcessor
                 AddForce(x, y, direction);
             }
         }
-        else if (angle > 0 && angle < 90)
+        else if (m_angle > 0 && m_angle < 90)
         {
             //(y == 0 || x == 0)
             for (int x = 0; x < resolution; x++)
@@ -67,7 +59,7 @@ public class RealisticFlow : RayProcessor
                 AddForce(0, y, direction);
             }
         }
-        else if (angle == 90)
+        else if (m_angle == 90)
         {
             int x = 0;
             for (int y = 0; y < resolution; y++)
@@ -75,7 +67,7 @@ public class RealisticFlow : RayProcessor
                 AddForce(x, y, direction);
             }
         }
-        else if (angle > 90 && angle < 180)
+        else if (m_angle > 90 && m_angle < 180)
         {
             //(x == 0 || y == resolution - 1))
             for (int x = 0; x < resolution; x++)
@@ -87,7 +79,7 @@ public class RealisticFlow : RayProcessor
                 AddForce(0, y, direction);
             }
         }
-        else if (angle == 180)
+        else if (m_angle == 180)
         {
             int y = resolution - 1;
             for (int x = 0; x < resolution; x++)
@@ -95,7 +87,7 @@ public class RealisticFlow : RayProcessor
                 AddForce(x, y, direction);
             }
         }
-        else if (angle > 180 && angle < 270)
+        else if (m_angle > 180 && m_angle < 270)
         {
             //(y == resolution - 1 || x == resolution - 1)
             for (int x = 0; x < resolution; x++)
@@ -107,7 +99,7 @@ public class RealisticFlow : RayProcessor
                 AddForce(resolution - 1, y, direction);
             }
         }
-        else if (angle == 270)
+        else if (m_angle == 270)
         {
             int x = resolution - 1;
             for (int y = 0; y < resolution; y++)
@@ -115,7 +107,7 @@ public class RealisticFlow : RayProcessor
                 AddForce(x, y, direction);
             }
         }
-        else if (angle > 270 && angle < 360)
+        else if (m_angle > 270 && m_angle < 360)
         {
             //(x == resolution - 1 || y == 0)
             for (int x = 0; x < resolution; x++)

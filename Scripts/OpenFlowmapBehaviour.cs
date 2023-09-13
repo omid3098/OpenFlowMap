@@ -4,7 +4,6 @@ public class OpenFlowmapBehaviour : MonoBehaviour
 {
     [SerializeField] LayerMask m_LayerMask;
     [SerializeField] int m_rayCount = 100;
-    [SerializeField, Range(0f, 1f)] float m_rayLength = 0.5f;
     [SerializeField] RayProcessor[] m_processors;
     [SerializeField] bool m_processEveryFrame = false;
     [SerializeField] public RenderTexture m_renderTexture;
@@ -12,6 +11,7 @@ public class OpenFlowmapBehaviour : MonoBehaviour
     [Header("Debug")]
     [SerializeField] bool m_drawGizmos = true;
     [SerializeField] bool m_drawGizmosOnSelected = true;
+    [SerializeField, Range(0f, 1f)] float m_rayLength = 0.5f;
 
     public LayerMask LayerMask => m_LayerMask;
 
@@ -148,13 +148,13 @@ public class OpenFlowmapBehaviour : MonoBehaviour
                 float wy = indexY - y0;
 
                 // Fetch the nearest four simulation values
-                Color color00 = Utils.ConvertDirectionToColor(new Vector2(m_rayProjector.GetRay(x0, y0).direction.x, m_rayProjector.GetRay(x0, y0).direction.z));
-                Color color01 = Utils.ConvertDirectionToColor(new Vector2(m_rayProjector.GetRay(x0, y1).direction.x, m_rayProjector.GetRay(x0, y1).direction.z));
-                Color color10 = Utils.ConvertDirectionToColor(new Vector2(m_rayProjector.GetRay(x1, y0).direction.x, m_rayProjector.GetRay(x1, y0).direction.z));
-                Color color11 = Utils.ConvertDirectionToColor(new Vector2(m_rayProjector.GetRay(x1, y1).direction.x, m_rayProjector.GetRay(x1, y1).direction.z));
+                Color color00 = Utils.ConvertDirectionToColor(m_rayProjector.GetRay(x0, y0).direction);
+                Color color01 = Utils.ConvertDirectionToColor(m_rayProjector.GetRay(x0, y1).direction);
+                Color color10 = Utils.ConvertDirectionToColor(m_rayProjector.GetRay(x1, y0).direction);
+                Color color11 = Utils.ConvertDirectionToColor(m_rayProjector.GetRay(x1, y1).direction);
 
                 // Perform bilinear interpolation
-                Color interpolatedColor = color00 * (1 - wx) * (1 - wy) + color10 * wx * (1 - wy) + color01 * (1 - wx) * wy + color11 * wx * wy;
+                Color interpolatedColor = (1 - wx) * (1 - wy) * color00 + wx * (1 - wy) * color10 + (1 - wx) * wy * color01 + wx * wy * color11;
 
                 var correctX = textureSize - 1 - u;
                 var correctY = textureSize - 1 - v;
